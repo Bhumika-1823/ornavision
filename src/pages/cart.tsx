@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { useAppContext } from "@/context/AppContext";
 import { PRODUCTS, getProductById } from "@/data/products";
@@ -16,6 +16,7 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function CartPage() {
   const [, setLocation] = useLocation();
   const {
+    user,
     cart,
     removeFromCart,
     updateQty,
@@ -28,6 +29,14 @@ export default function CartPage() {
   } = useAppContext();
   const [couponInput, setCouponInput] = useState("");
   const [couponError, setCouponError] = useState("");
+
+  useEffect(() => {
+    if (!user) {
+      setLocation("/login");
+    }
+  }, [user, setLocation]);
+
+  if (!user) return null;
 
   const handleApplyCoupon = () => {
     const success = applyCoupon(couponInput);

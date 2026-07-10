@@ -15,6 +15,12 @@ export interface OrderType {
   status: "Processing" | "Shipped" | "Delivered" | "Refunded";
 }
 
+export interface UserType {
+  name: string;
+  email: string;
+}
+
+
 interface CartItem {
   productId: string;
   quantity: number;
@@ -38,6 +44,10 @@ interface AppState {
   removeCoupon: () => void;
   orders: OrderType[];
   placeOrder: (order: OrderType) => void;
+  user: UserType | null;
+  login: (email: string, pass: string) => Promise<boolean>;
+  register: (name: string, email: string, pass: string) => Promise<boolean>;
+  logout: () => void;
 }
 
 const AppContext = createContext<AppState | undefined>(undefined);
@@ -52,57 +62,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   });
 
-  const [orders, setOrders] = useState<OrderType[]>(() => {
-    try {
-      const saved = localStorage.getItem("ornavision_orders");
-      if (saved) return JSON.parse(saved);
-    } catch {}
-    // Initial mock data if empty
-    return [
-      {
-        id: "ORD-8923",
-        date: "2026-07-10",
-        customer: "Sarah Jenkins",
-        amount: 850,
-        status: "Processing",
-      },
-      {
-        id: "ORD-8922",
-        date: "2026-07-09",
-        customer: "Michael Chen",
-        amount: 450,
-        status: "Shipped",
-      },
-      {
-        id: "ORD-8921",
-        date: "2026-07-08",
-        customer: "Priya Sharma",
-        amount: 1250,
-        status: "Delivered",
-      },
-      {
-        id: "ORD-8920",
-        date: "2026-07-08",
-        customer: "David Miller",
-        amount: 320,
-        status: "Delivered",
-      },
-      {
-        id: "ORD-8919",
-        date: "2026-07-07",
-        customer: "Emma Lewis",
-        amount: 850,
-        status: "Refunded",
-      },
-      {
-        id: "ORD-8918",
-        date: "2026-07-05",
-        customer: "James Wilson",
-        amount: 1100,
-        status: "Delivered",
-      },
-    ];
-  });
+  const [orders, setOrders] = useState<OrderType[]>([]);
 
   const [wishlist, setWishlist] = useState<string[]>(() => {
     try {
@@ -116,23 +76,59 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
 
+  const [user, setUser] = useState<UserType | null>(() => {
+    try {
+      const saved = localStorage.getItem("ornavision_user");
+      return saved ? JSON.parse(saved) : null;
+    } catch {
+      return null;
+    }
+  });
+
   useEffect(() => {
+    if (user) {
+      localStorage.setItem("ornavision_user", JSON.stringify(user));
+      // Fetch cart and orders when user logs in
+      fetch(`/api/cart?email=${user.email}`).then(res => res.json()).then(data => setCart(data));
+      fetch('/api/orders').then(res => res.json()).then(data => setOrders(data));
+    } else {
+      localStorage.removeItem("ornavision_user");
+      setCart([]);
+      setOrders([]);
+    }
+  }, [user]);
+
+  // Sync cart to API whenever it changes (if user is logged in)
+  useEffect(() => {
+    if (user && cart.length >= 0) {
+      fetch('/api/cart', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: user.email, cart })
+      });
+    }
     localStorage.setItem("ornavision_cart", JSON.stringify(cart));
-  }, [cart]);
+  }, [cart, user]);
 
   useEffect(() => {
     localStorage.setItem("ornavision_wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
-  useEffect(() => {
-    localStorage.setItem("ornavision_orders", JSON.stringify(orders));
-  }, [orders]);
-
   const placeOrder = (order: OrderType) => {
+    if (!user) return;
     setOrders((prev) => [order, ...prev]);
+    fetch('/api/orders', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order })
+    });
   };
 
   const addToCart = (productId: string, qty = 1) => {
+    if (!user) {
+      window.location.href = '/login';
+      return;
+    }
     setCart((prev) => {
       const existing = prev.find((item) => item.productId === productId);
       if (existing) {
@@ -212,6 +208,46 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     [couponApplied, cartTotal],
   );
 
+  const login = async (email: string, pass: string) => {
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, password: pass })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUser(data.user);
+        return true;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return false;
+  };
+
+  const register = async (name: string, email: string, pass: string) => {
+    try {
+      const res = await fetch('/api/auth/register', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, email, password: pass })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setUser(data.user);
+        return true;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return false;
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
   return (
     <AppContext.Provider
       value={{
@@ -231,6 +267,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         removeCoupon,
         orders,
         placeOrder,
+        user,
+        login,
+        register,
+        logout,
       }}
     >
       {children}

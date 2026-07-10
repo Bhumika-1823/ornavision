@@ -15,6 +15,7 @@ export default function CheckoutPage() {
     couponDiscount,
     couponCode,
     placeOrder,
+    user,
   } = useAppContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -27,10 +28,14 @@ export default function CheckoutPage() {
 
   // Redirect if empty and not success
   useEffect(() => {
-    if (cart.length === 0 && !isSuccess) {
+    if (!user) {
+      setLocation("/login");
+    } else if (cart.length === 0 && !isSuccess) {
       setLocation("/cart");
     }
-  }, [cart, isSuccess, setLocation]);
+  }, [cart, isSuccess, setLocation, user]);
+
+  if (!user) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

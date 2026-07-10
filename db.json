@@ -1,0 +1,13 @@
+{
+  "users": [
+    {
+      "name": "abhi",
+      "email": "admin@anonymous.club",
+      "password": "admin123"
+    }
+  ],
+  "carts": {
+    "admin@anonymous.club": []
+  },
+  "orders": []
+}

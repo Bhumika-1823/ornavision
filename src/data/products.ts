@@ -621,30 +621,6 @@ export const PRODUCTS: Product[] = [
     weight: "18g",
     gemstone: "Emerald",
   },
-  {
-    id: "designer-silverchain",
-    name: "Silver Chain",
-    slug: "designer-silverchain",
-    description: "A beautiful silver chain necklace.",
-    price: 320,
-    category: "Necklaces",
-    categorySlug: "necklaces",
-    stock: 10,
-    images: ["/images/designer/silver-chain.png"],
-    tryonMetadata: {
-      type: "necklace",
-      overlayImage: "/images/designer/silver-chain.png",
-      scale: 1.5,
-      offsetY: -20,
-      offsetX: 0,
-    },
-    ratingsAvg: 4.7,
-    ratingsCount: 20,
-    isFeatured: false,
-    material: "Silver",
-    weight: "10g",
-    gemstone: "None",
-  },
 ];
 
 export function getProductById(id: string): Product | undefined {

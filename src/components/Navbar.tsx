@@ -8,6 +8,7 @@ import {
   ChevronDown,
   Wand2,
   Scissors,
+  User,
 } from "lucide-react";
 import { useAppContext } from "@/context/AppContext";
 import { CATEGORIES } from "@/data/products";
@@ -17,7 +18,8 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [collectionsOpen, setCollectionsOpen] = useState(false);
-  const { cartCount, wishlist } = useAppContext();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const { cartCount, wishlist, user, logout } = useAppContext();
   const [location] = useLocation();
 
   useEffect(() => {
@@ -114,6 +116,46 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-5">
+            {user ? (
+              <div
+                className="relative group"
+                onMouseEnter={() => setUserMenuOpen(true)}
+                onMouseLeave={() => setUserMenuOpen(false)}
+              >
+                <button className="flex items-center gap-2 text-sm uppercase tracking-wider text-primary hover-gold transition-colors py-2">
+                  <User size={20} />
+                </button>
+                <AnimatePresence>
+                  {userMenuOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: 10 }}
+                      transition={{ duration: 0.2 }}
+                      className="absolute top-full right-0 w-48 glass-card rounded-md overflow-hidden py-2"
+                    >
+                      <div className="px-4 py-2 border-b border-white/10 mb-1">
+                        <p className="text-sm text-foreground truncate">{user.name}</p>
+                        <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                      </div>
+                      <button
+                        onClick={logout}
+                        className="w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-white/5 transition-colors"
+                      >
+                        Logout
+                      </button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="text-foreground hover-gold transition-colors"
+              >
+                <User size={20} />
+              </Link>
+            )}
             <Link
               href="/wishlist"
               className="relative text-foreground hover-gold transition-colors"
@@ -186,6 +228,33 @@ export default function Navbar() {
                 ))}
               </div>
               <div className="h-px w-full bg-border/50 my-2"></div>
+              {user ? (
+                <>
+                  <div className="flex items-center gap-3 px-2 py-2 mb-2 bg-white/5 rounded-md border border-white/10">
+                    <User size={20} className="text-primary" />
+                    <div className="overflow-hidden">
+                      <p className="text-sm font-medium truncate">{user.name}</p>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setMobileMenuOpen(false);
+                    }}
+                    className="text-left text-lg uppercase tracking-widest brand-font text-red-400"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <Link
+                  href="/login"
+                  className="text-lg uppercase tracking-widest brand-font flex items-center gap-2"
+                >
+                  <User size={20} /> Sign In
+                </Link>
+              )}
               <Link
                 href="/tryon"
                 className="text-lg uppercase tracking-widest brand-font gold-text flex items-center gap-2"

@@ -17,6 +17,8 @@ import DeveloperScenePage from "@/pages/developer-scene";
 import CalibrationStudioPage from "@/pages/calibration-studio";
 import DeviceLabPage from "@/pages/device-lab";
 import AdminDashboardPage from "@/pages/admin";
+import LoginPage from "@/pages/login";
+import RegisterPage from "@/pages/register";
 
 const queryClient = new QueryClient();
 
@@ -52,6 +54,8 @@ function Router() {
       <Route path="/calibration-studio" component={CalibrationStudioPage} />
       <Route path="/lab" component={DeviceLabPage} />
       <Route path="/admin" component={AdminDashboardPage} />
+      <Route path="/login" component={LoginPage} />
+      <Route path="/register" component={RegisterPage} />
       <Route component={NotFound} />
     </Switch>
   );
