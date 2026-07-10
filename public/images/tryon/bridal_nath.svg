@@ -1,0 +1,68 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 80" width="150" height="80">
+  <defs>
+    <!-- Gold Gradient -->
+    <linearGradient id="nath-gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#AA771C" />
+      <stop offset="30%" stop-color="#FCF6BA" />
+      <stop offset="50%" stop-color="#D4AF37" />
+      <stop offset="70%" stop-color="#FBF5B7" />
+      <stop offset="100%" stop-color="#8B6508" />
+    </linearGradient>
+    
+    <!-- Red Ruby Gradient -->
+    <radialGradient id="nath-ruby" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#FF5252" />
+      <stop offset="50%" stop-color="#D50000" />
+      <stop offset="100%" stop-color="#7f0000" />
+    </radialGradient>
+
+    <!-- Green Emerald Gradient -->
+    <radialGradient id="nath-emerald" cx="35%" cy="35%" r="65%">
+      <stop offset="0%" stop-color="#69F0AE" />
+      <stop offset="50%" stop-color="#00C853" />
+      <stop offset="100%" stop-color="#00600f" />
+    </radialGradient>
+
+    <!-- Pearl Gradient -->
+    <radialGradient id="nath-pearl" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="60%" stop-color="#FAFAD2" />
+      <stop offset="100%" stop-color="#D3D3D3" />
+    </radialGradient>
+  </defs>
+
+  <!-- Left Side: Main Nose Ring Hoop -->
+  <circle cx="30" cy="40" r="22" fill="none" stroke="url(#nath-gold)" stroke-width="2.5"/>
+  
+  <!-- Tiny gap in hoop representing the opening -->
+  <path d="M 12 30 A 22 22 0 0 1 12 50" fill="none" stroke="url(#nath-gold)" stroke-width="2.5" />
+
+  <!-- Traditional Floral Bead Cluster on the lower-right side of the ring -->
+  <!-- Center stone (Ruby) -->
+  <circle cx="48" cy="48" r="5" fill="url(#nath-ruby)"/>
+  <circle cx="48" cy="48" r="6.5" fill="none" stroke="url(#nath-gold)" stroke-width="1"/>
+
+  <!-- Petals (Pearls and Emeralds surrounding the center ruby) -->
+  <circle cx="41" cy="43" r="3.5" fill="url(#nath-pearl)"/>
+  <circle cx="48" cy="39" r="3.5" fill="url(#nath-pearl)"/>
+  <circle cx="55" cy="43" r="3.5" fill="url(#nath-pearl)"/>
+  <circle cx="56" cy="51" r="3.5" fill="url(#nath-emerald)"/>
+  <circle cx="48" cy="57" r="3.5" fill="url(#nath-pearl)"/>
+  <circle cx="40" cy="51" r="3.5" fill="url(#nath-emerald)"/>
+
+  <!-- Hanging bead cluster under the main flower -->
+  <line x1="48" y1="60.5" x2="48" y2="69" stroke="url(#nath-gold)" stroke-width="1.2"/>
+  <circle cx="48" cy="72" r="3" fill="url(#nath-ruby)"/>
+  <circle cx="48" cy="76" r="1.5" fill="url(#nath-pearl)"/>
+
+  <!-- Extension Chain connecting the Nath to the Hair/Ear -->
+  <!-- Dotted path representing tiny golden links -->
+  <path d="M 52 42 Q 90 45, 140 18" fill="none" stroke="url(#nath-gold)" stroke-dasharray="1.5,4" stroke-width="1.8" stroke-linecap="round"/>
+  
+  <!-- Spacing Beads along the chain -->
+  <circle cx="80" cy="40" r="2" fill="url(#nath-gold)"/>
+  <circle cx="110" cy="31" r="2" fill="url(#nath-ruby)"/>
+  
+  <!-- Hair Pin Hook at the end of the chain -->
+  <path d="M 140 18 Q 143 14, 145 18 T 147 22" fill="none" stroke="url(#nath-gold)" stroke-width="2" stroke-linecap="round"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" width="400" height="300">
+  <defs>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#BF953F" />
+      <stop offset="25%" stop-color="#FCF6BA" />
+      <stop offset="50%" stop-color="#B38728" />
+      <stop offset="75%" stop-color="#FBF5B7" />
+      <stop offset="100%" stop-color="#AA771C" />
+    </linearGradient>
+  </defs>
+  <!-- Main Choker Arc -->
+  <path d="M 100 100 A 100 80 0 0 0 300 100" fill="none" stroke="url(#gold)" stroke-width="12" stroke-linecap="round"/>
+  <!-- Inner Arc Details -->
+  <path d="M 120 105 A 80 65 0 0 0 280 105" fill="none" stroke="url(#gold)" stroke-width="4"/>
+  <!-- Hanging jewels/decorations -->
+  <circle cx="150" cy="140" r="10" fill="#D4AF37"/>
+  <polygon points="150,150 144,165 156,165" fill="#BF953F"/>
+  
+  <circle cx="200" cy="155" r="14" fill="#D4AF37"/>
+  <polygon points="200,169 192,190 208,190" fill="#E6C653"/>
+  <circle cx="200" cy="183" r="5" fill="#FFFFFF" opacity="0.9"/>
+  
+  <circle cx="250" cy="140" r="10" fill="#D4AF37"/>
+  <polygon points="250,150 244,165 256,165" fill="#BF953F"/>
+</svg>

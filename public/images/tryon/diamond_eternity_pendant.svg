@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" width="400" height="400">
+  <defs>
+    <linearGradient id="silver" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E0E0E0" />
+      <stop offset="50%" stop-color="#F5F5F5" />
+      <stop offset="100%" stop-color="#9E9E9E" />
+    </linearGradient>
+    <radialGradient id="sparkle" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="30%" stop-color="#E0F7FA" />
+      <stop offset="70%" stop-color="#80DEEA" stop-opacity="0.5" />
+      <stop offset="100%" stop-color="#00ACC1" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <!-- Silver Chain -->
+  <path d="M 100 80 Q 200 280 300 80" fill="none" stroke="url(#silver)" stroke-width="4" stroke-linecap="round"/>
+  <!-- Pendant connector -->
+  <rect x="196" y="174" width="8" height="14" rx="2" fill="url(#silver)"/>
+  <!-- Diamond Shape -->
+  <polygon points="200,188 218,205 200,230 182,205" fill="url(#sparkle)"/>
+  <polygon points="200,192 212,205 200,222 188,205" fill="#E0F7FA" opacity="0.8"/>
+  <!-- Sparkle star -->
+  <path d="M 200 198 L 202 205 L 209 205 L 203 209 L 205 216 L 200 211 L 195 216 L 197 209 L 191 205 L 198 205 Z" fill="#FFFFFF"/>
+</svg>

@@ -1,0 +1,38 @@
+﻿src/engine/anchors/__tests__/anchor.test.ts(53,5): error TS2322: Type 'NeckMetrics | null | undefined' is not assignable to type 'NeckMetrics | undefined'.
+  Type 'null' is not assignable to type 'NeckMetrics | undefined'.
+src/engine/anchors/__tests__/anchor.test.ts(114,17): error TS2304: Cannot find name 'BodyState'.
+src/engine/anchors/__tests__/anchor.test.ts(128,5): error TS2322: Type 'NeckMetrics | null' is not assignable to type 'NeckMetrics | undefined'.
+  Type 'null' is not assignable to type 'NeckMetrics | undefined'.
+src/engine/anchors/noseRingAnchor.ts(48,5): error TS2588: Cannot assign to 'drawWidth' because it is a constant.
+src/engine/anchors/noseRingAnchor.ts(49,5): error TS2588: Cannot assign to 'drawHeight' because it is a constant.
+src/engine/testing/__tests__/bracelet.test.ts(92,98): error TS2353: Object literal may only specify known properties, and 'reflection' does not exist in type 'CalibrationSpec'.
+src/engine/testing/__tests__/calibration.test.ts(37,7): error TS2353: Object literal may only specify known properties, and 'reflection' does not exist in type 'ProductPackage'.
+src/engine/testing/__tests__/calibration.test.ts(56,7): error TS2353: Object literal may only specify known properties, and 'reflection' does not exist in type 'ProductPackage'.
+src/engine/testing/__tests__/earring.test.ts(44,62): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/earring.test.ts(62,62): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/earring.test.ts(73,62): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/earring.test.ts(84,43): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/earring.test.ts(90,62): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/earring.test.ts(100,43): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/earring.test.ts(105,62): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/recovery.test.ts(18,18): error TS2345: Argument of type '{ videoElement: HTMLVideoElement; canvasElement: HTMLCanvasElement; mode: "live"; }' is not assignable to parameter of type 'EngineStartOptions'.
+  Property 'imageElement' is missing in type '{ videoElement: HTMLVideoElement; canvasElement: HTMLCanvasElement; mode: "live"; }' but required in type 'EngineStartOptions'.
+src/engine/testing/__tests__/render.test.ts(42,41): error TS2304: Cannot find name 'vi'.
+src/engine/testing/__tests__/render.test.ts(49,20): error TS2304: Cannot find name 'vi'.
+src/engine/testing/__tests__/render.test.ts(67,27): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/render.test.ts(76,7): error TS2322: Type '{ blur: number; offsetX: number; offsetY: number; color: string; opacity: number; }' is not assignable to type 'string'.
+src/engine/testing/__tests__/render.test.ts(79,25): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/render.test.ts(95,25): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/render.test.ts(109,27): error TS2345: Argument of type '{ image: any; }' is not assignable to parameter of type 'AssetBundle'.
+  Type '{ image: any; }' is missing the following properties from type 'AssetBundle': mask, shadow
+src/engine/testing/__tests__/ring.test.ts(90,98): error TS2353: Object literal may only specify known properties, and 'reflection' does not exist in type 'CalibrationSpec'.
