@@ -1,21 +1,30 @@
-import { JewelryMetadata } from '../metadata/JewelryMetadata';
-import { FrameState, Transform2D } from '../types';
-import { applyCalibration, baseTransform, computePerspectiveScaleX, heightForWidth } from './common';
-import { AssetBundle } from '../assets/AssetManager';
-import { UserAdjust } from './UserAdjust';
+import { JewelryMetadata } from "../metadata/JewelryMetadata";
+import { FrameState, Transform2D } from "../types";
+import {
+  applyCalibration,
+  baseTransform,
+  computePerspectiveScaleX,
+  heightForWidth,
+} from "./common";
+import { AssetBundle } from "../assets/AssetManager";
+import { UserAdjust } from "./UserAdjust";
 
 export function computeForeheadTransform(
   meta: JewelryMetadata,
   frame: FrameState,
   asset: AssetBundle,
-  userAdjust: UserAdjust
+  userAdjust: UserAdjust,
 ): Transform2D | null {
   const { face } = frame;
   if (!face) return null;
   if (!asset.image.complete || asset.image.naturalWidth === 0) return null;
 
   const drawWidth = face.faceWidthPx * meta.defaultScale * userAdjust.scale;
-  const drawHeight = heightForWidth(drawWidth, asset.image.naturalWidth, asset.image.naturalHeight);
+  const drawHeight = heightForWidth(
+    drawWidth,
+    asset.image.naturalWidth,
+    asset.image.naturalHeight,
+  );
   const scaleX = computePerspectiveScaleX(meta, face.pose);
 
   const offsetX = meta.anchors.offsetUnits.x * face.faceWidthPx;

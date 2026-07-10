@@ -19,13 +19,18 @@ class AssetManager {
 
   private loadImage(src: string): HTMLImageElement {
     const img = new Image();
-    img.crossOrigin = 'anonymous';
+    img.crossOrigin = "anonymous";
     img.src = src;
     return img;
   }
 
   /** Ensure the given image/mask/shadow trio is loading/loaded, returning the (possibly still-loading) bundle. */
-  ensure(id: string, image: string, mask?: string, shadow?: string): AssetBundle {
+  ensure(
+    id: string,
+    image: string,
+    mask?: string,
+    shadow?: string,
+  ): AssetBundle {
     const existing = this.entries.get(id);
     if (
       existing &&

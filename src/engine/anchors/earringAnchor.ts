@@ -1,10 +1,15 @@
-import { JewelryMetadata } from '../metadata/JewelryMetadata';
-import { FrameState, Transform2D } from '../types';
-import { applyCalibration, baseTransform, computePerspectiveScaleX, heightForWidth } from './common';
-import { AssetBundle } from '../assets/AssetManager';
-import { UserAdjust } from './UserAdjust';
-import { EarEstimator } from '../tracking/EarEstimator';
-import { OneEuroFilter } from '../smoothing/OneEuroFilter';
+import { JewelryMetadata } from "../metadata/JewelryMetadata";
+import { FrameState, Transform2D } from "../types";
+import {
+  applyCalibration,
+  baseTransform,
+  computePerspectiveScaleX,
+  heightForWidth,
+} from "./common";
+import { AssetBundle } from "../assets/AssetManager";
+import { UserAdjust } from "./UserAdjust";
+import { EarEstimator } from "../tracking/EarEstimator";
+import { OneEuroFilter } from "../smoothing/OneEuroFilter";
 
 export interface EarringMetrics {
   swingAngle: number;
@@ -30,8 +35,8 @@ interface PhysicsState {
 const leftPhysicsStates = new Map<string, PhysicsState>();
 const rightPhysicsStates = new Map<string, PhysicsState>();
 
-function getPhysicsState(id: string, side: 'left' | 'right'): PhysicsState {
-  const map = side === 'left' ? leftPhysicsStates : rightPhysicsStates;
+function getPhysicsState(id: string, side: "left" | "right"): PhysicsState {
+  const map = side === "left" ? leftPhysicsStates : rightPhysicsStates;
   if (!map.has(id)) {
     map.set(id, {
       velocity: 0,
@@ -48,11 +53,16 @@ export function computeEarringTransforms(
   meta: JewelryMetadata,
   frame: FrameState,
   asset: AssetBundle,
-  userAdjust: UserAdjust
+  userAdjust: UserAdjust,
 ): EarringTransforms {
-  const defaultReturn: EarringTransforms = { left: null, right: null, metrics: { left: null, right: null } };
-  
-  if (!asset.image.complete || asset.image.naturalWidth === 0) return defaultReturn;
+  const defaultReturn: EarringTransforms = {
+    left: null,
+    right: null,
+    metrics: { left: null, right: null },
+  };
+
+  if (!asset.image.complete || asset.image.naturalWidth === 0)
+    return defaultReturn;
 
   const earMetrics = EarEstimator.estimate(frame);
   if (!earMetrics) return defaultReturn;
@@ -74,7 +84,11 @@ export function computeEarringTransforms(
   // The ear height is approximately 22% of face width — that's the natural earring scale base.
   const earSizeBase = earMetrics.faceWidthPx * 0.22;
   const drawWidth = earSizeBase * meta.defaultScale * userAdjust.scale;
-  const drawHeight = heightForWidth(drawWidth, asset.image.naturalWidth, asset.image.naturalHeight);
+  const drawHeight = heightForWidth(
+    drawWidth,
+    asset.image.naturalWidth,
+    asset.image.naturalHeight,
+  );
   const scaleX = computePerspectiveScaleX(meta, frame.face!.pose);
 
   const offsetX = (meta.anchors.offsetUnits.x + baseOffset.x) * earSizeBase;
@@ -83,17 +97,23 @@ export function computeEarringTransforms(
   // Custom fade logic
   // Yaw: + is looking left (right ear visible), - is looking right (left ear visible)
   const absYaw = Math.abs(earMetrics.headYaw);
-  
+
   // If looking left (+yaw), left ear fades
   let leftVisibility = 1.0;
   if (earMetrics.headYaw > startYaw) {
-    leftVisibility = 1 - Math.min(1, (earMetrics.headYaw - startYaw) / (endYaw - startYaw));
+    leftVisibility =
+      1 - Math.min(1, (earMetrics.headYaw - startYaw) / (endYaw - startYaw));
   }
 
   // If looking right (-yaw), right ear fades
   let rightVisibility = 1.0;
   if (earMetrics.headYaw < -startYaw) {
-    rightVisibility = 1 - Math.min(1, (Math.abs(earMetrics.headYaw) - startYaw) / (endYaw - startYaw));
+    rightVisibility =
+      1 -
+      Math.min(
+        1,
+        (Math.abs(earMetrics.headYaw) - startYaw) / (endYaw - startYaw),
+      );
   }
 
   // Clamp
@@ -102,7 +122,7 @@ export function computeEarringTransforms(
 
   // Compute Left Transform
   const leftT = computeSingleEarring(
-    'left',
+    "left",
     earMetrics.leftEar,
     leftVisibility,
     earMetrics,
@@ -118,12 +138,12 @@ export function computeEarringTransforms(
     offsetX,
     offsetY,
     baseRotOffset,
-    userAdjust
+    userAdjust,
   );
 
   // Compute Right Transform
   const rightT = computeSingleEarring(
-    'right',
+    "right",
     earMetrics.rightEar,
     rightVisibility,
     earMetrics,
@@ -139,18 +159,18 @@ export function computeEarringTransforms(
     offsetX,
     offsetY,
     baseRotOffset,
-    userAdjust
+    userAdjust,
   );
 
   return {
     left: leftT.transform,
     right: rightT.transform,
-    metrics: { left: leftT.metrics, right: rightT.metrics }
+    metrics: { left: leftT.metrics, right: rightT.metrics },
   };
 }
 
 function computeSingleEarring(
-  side: 'left' | 'right',
+  side: "left" | "right",
   anchorPt: { x: number; y: number },
   visibility: number,
   earMetrics: ReturnType<typeof EarEstimator.estimate>,
@@ -166,7 +186,7 @@ function computeSingleEarring(
   offsetX: number,
   offsetY: number,
   baseRotOffset: number,
-  userAdjust: UserAdjust
+  userAdjust: UserAdjust,
 ): { transform: Transform2D | null; metrics: EarringMetrics | null } {
   if (visibility < 0.02) return { transform: null, metrics: null };
 
@@ -185,15 +205,18 @@ function computeSingleEarring(
   if (swingWeight > 0) {
     const maxDelta = 30; // clamp lateral movement
     const clampedDeltaX = Math.max(-maxDelta, Math.min(maxDelta, deltaX));
-    const acceleration = (clampedDeltaX * 0.01) * swingWeight * (1 - damping);
+    const acceleration = clampedDeltaX * 0.01 * swingWeight * (1 - damping);
 
     state.velocity += acceleration;
     state.velocity -= state.angle * swingStiffness; // spring
-    state.velocity *= (1 - damping);
+    state.velocity *= 1 - damping;
     state.angle += state.velocity;
     state.angle = Math.max(-maxSwing, Math.min(maxSwing, state.angle));
 
-    state.filter.updateParams({ minCutoff: earMetrics!.trackingQuality < 0.5 ? 0.1 : 1.0, beta: 0.05 });
+    state.filter.updateParams({
+      minCutoff: earMetrics!.trackingQuality < 0.5 ? 0.1 : 1.0,
+      beta: 0.05,
+    });
     smoothedAngle = state.filter.filter(state.angle, tSec);
   } else {
     state.velocity = 0;
@@ -214,7 +237,7 @@ function computeSingleEarring(
     scaleX,
     opacity: visibility,
     visible: true,
-    flipX: side === 'right' // right earring is mirrored
+    flipX: side === "right", // right earring is mirrored
   };
 
   transform = applyCalibration(meta, transform);
@@ -223,7 +246,7 @@ function computeSingleEarring(
     swingAngle: smoothedAngle,
     visibility,
     attachmentError: 0,
-    velocity: state.velocity
+    velocity: state.velocity,
   };
 
   return { transform, metrics };

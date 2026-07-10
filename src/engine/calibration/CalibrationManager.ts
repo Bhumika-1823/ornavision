@@ -1,5 +1,5 @@
-import { JewelryMetadata } from '../metadata/JewelryMetadata';
-import { ProductPackage } from '../metadata/ProductPackage';
+import { JewelryMetadata } from "../metadata/JewelryMetadata";
+import { ProductPackage } from "../metadata/ProductPackage";
 
 /**
  * Exposes methods for a future Studio UI to mutate a ProductPackage in real-time,
@@ -16,16 +16,16 @@ export class CalibrationManager {
 
   updateCalibration(patch: Partial<JewelryMetadata>) {
     if (!this.activeMetadata || !this.activePackage) return;
-    
+
     // Mutate the live metadata (which the Renderer reads each frame)
     Object.assign(this.activeMetadata, patch);
-    
+
     // Also save it to the package manifest
     Object.assign(this.activePackage.calibration, patch);
   }
 
   exportPackageJson(): string {
-    if (!this.activePackage) return '{}';
+    if (!this.activePackage) return "{}";
     return JSON.stringify(this.activePackage, null, 2);
   }
 

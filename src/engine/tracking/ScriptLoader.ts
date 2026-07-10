@@ -7,16 +7,16 @@ export function loadScript(src: string): Promise<void> {
     return Promise.resolve();
   }
 
-  // Chain script loads sequentially to prevent MediaPipe Emscripten WASM 
+  // Chain script loads sequentially to prevent MediaPipe Emscripten WASM
   // global Module collisions.
   loadLock = loadLock.then(() => {
     return new Promise<void>((resolve, reject) => {
       if (loaded.has(src)) return resolve();
-      
-      const script = document.createElement('script');
+
+      const script = document.createElement("script");
       script.src = src;
       script.async = true;
-      script.crossOrigin = 'anonymous';
+      script.crossOrigin = "anonymous";
       script.onload = () => {
         loaded.add(src);
         resolve();

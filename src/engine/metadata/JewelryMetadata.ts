@@ -8,36 +8,36 @@
  */
 
 export type JewelryCategory =
-  | 'necklace'
-  | 'earrings'
-  | 'ring'
-  | 'bracelet'
-  | 'watch'
-  | 'forehead'
-  | 'nose_ring';
+  | "necklace"
+  | "earrings"
+  | "ring"
+  | "bracelet"
+  | "watch"
+  | "forehead"
+  | "nose_ring";
 
 export type JewelrySubcategory =
-  | 'choker'
-  | 'bridal_necklace'
-  | 'long_chain'
-  | 'pendant'
-  | 'layered_necklace'
-  | 'stud'
-  | 'hoop'
-  | 'dangler'
-  | 'jhumka'
-  | 'long_earring'
-  | 'band'
-  | 'statement_ring'
-  | 'bangle'
-  | 'cuff'
-  | 'watch'
-  | 'maang_tikka'
-  | 'nath'
-  | 'nose_stud'
-  | 'generic';
+  | "choker"
+  | "bridal_necklace"
+  | "long_chain"
+  | "pendant"
+  | "layered_necklace"
+  | "stud"
+  | "hoop"
+  | "dangler"
+  | "jhumka"
+  | "long_earring"
+  | "band"
+  | "statement_ring"
+  | "bangle"
+  | "cuff"
+  | "watch"
+  | "maang_tikka"
+  | "nath"
+  | "nose_stud"
+  | "generic";
 
-export type QualityLevel = 'draft' | 'standard' | 'premium';
+export type QualityLevel = "draft" | "standard" | "premium";
 
 export interface AnchorSpec {
   /** Fraction (0-1) of the asset's own bounding box used as the pivot point when rotating/scaling. */
@@ -85,7 +85,7 @@ export interface ShadowSpec {
 }
 
 export interface ReflectionSpec {
-  mode: 'gold' | 'silver' | 'diamond' | 'pearl' | 'gem';
+  mode: "gold" | "silver" | "diamond" | "pearl" | "gem";
   intensity: number;
   color?: string; // Optional custom tint for highlights
 }
@@ -107,7 +107,7 @@ export interface PendantSpec {
   centerOffset: { x: number; y: number };
   /** Local rotation offset in radians. */
   rotationOffset: number;
-  
+
   /** Weight factor for gravity simulation. */
   gravityWeight: number;
   /** Spring stiffness for harmonic swing simulation. */
@@ -116,7 +116,7 @@ export interface PendantSpec {
   damping: number;
   /** Maximum swing angle in radians. */
   maxSwing: number;
-  
+
   /** Dynamic shadow offset for the pendant body. */
   shadowOffset?: { x: number; y: number };
 }
@@ -128,19 +128,19 @@ export interface EarringSpec {
   offset: { x: number; y: number };
   /** Local rotation offset in radians. */
   rotationOffset: number;
-  
+
   /** Weight for gravity simulation. 0 means rigid stud. >0 means heavy/swinging earring. */
   swingWeight: number;
   /** Damping factor for swing simulation (0-1). */
   damping: number;
   /** Max swing angle in radians. */
   maxSwing: number;
-  
-  /** Fade curve based on yaw. 
-   * startYaw: Earring is fully visible. 
+
+  /** Fade curve based on yaw.
+   * startYaw: Earring is fully visible.
    * endYaw: Earring is fully hidden/faded. */
   fadeCurve: { startYaw: number; endYaw: number };
-  
+
   /** Shadow offset (if any). */
   shadowOffset?: { x: number; y: number };
 }
@@ -158,7 +158,7 @@ export interface NecklaceSpec {
 
 export interface BraceletSpec {
   /** 'rigid' = snaps firmly to forearm rotation (watches). 'bangle' = swings slightly with gravity. */
-  physicsProfile: 'rigid' | 'bangle' | 'tennis';
+  physicsProfile: "rigid" | "bangle" | "tennis";
   /** Offset along the forearm from the wrist joint (in units of wrist width). Positive = up the arm. */
   wristOffsetUnits?: number;
 }
@@ -190,7 +190,7 @@ export interface JewelryMetadata {
 
   perspectiveCompression: PerspectiveCompressionSpec;
   lighting: LightingSpec;
-  
+
   shadowSpec?: ShadowSpec;
   reflectionSpec?: ReflectionSpec;
   postProcess?: PostProcessSpec;
@@ -209,9 +209,9 @@ export interface JewelryMetadata {
   braceletSpec?: BraceletSpec;
 
   /** Which finger a ring is worn on. Defaults to 'ring' (matches legacy behavior). Rings only. */
-  ringFinger?: 'thumb' | 'index' | 'middle' | 'ring' | 'pinky';
+  ringFinger?: "thumb" | "index" | "middle" | "ring" | "pinky";
   /** Which hand a ring/bracelet should render on when both hands are tracked: 'left' | 'right' | 'any' (first detected). */
-  preferredHand?: 'Left' | 'Right' | 'any';
+  preferredHand?: "Left" | "Right" | "any";
 }
 
 export const DEFAULT_ANCHORS: Record<JewelryCategory, AnchorSpec> = {
@@ -242,7 +242,10 @@ export const DEFAULT_CALIBRATION: CalibrationSpec = {
   offsetCorrection: { x: 0, y: 0 },
 };
 
-export const DEFAULT_TRACKING_REQUIREMENTS: Record<JewelryCategory, TrackingRequirements> = {
+export const DEFAULT_TRACKING_REQUIREMENTS: Record<
+  JewelryCategory,
+  TrackingRequirements
+> = {
   necklace: { face: true, hands: false, body: true },
   earrings: { face: true, hands: false, body: false },
   ring: { face: false, hands: true, body: false },

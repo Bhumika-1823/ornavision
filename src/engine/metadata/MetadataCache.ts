@@ -1,4 +1,4 @@
-import { JewelryMetadata } from './JewelryMetadata';
+import { JewelryMetadata } from "./JewelryMetadata";
 
 /**
  * MetadataCache avoids re-validating/re-normalizing metadata on every

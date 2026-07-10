@@ -1,5 +1,5 @@
-import { OneEuroPointFilter, OneEuroOptions } from './OneEuroFilter';
-import { Point3D } from '../types';
+import { OneEuroPointFilter, OneEuroOptions } from "./OneEuroFilter";
+import { Point3D } from "../types";
 
 /** Simple configurable exponential moving average for scalars (rotation, scale, distance). */
 export class EMAScalar {
@@ -35,7 +35,9 @@ export class LandmarkSmoother {
   private missedFrames = 0;
   private readonly resetAfterMissedFrames = 5;
 
-  constructor(private opts: OneEuroOptions = { minCutoff: 1.2, beta: 0.02, dCutoff: 1.0 }) {}
+  constructor(
+    private opts: OneEuroOptions = { minCutoff: 1.2, beta: 0.02, dCutoff: 1.0 },
+  ) {}
 
   /** Call once per frame with null when tracking is lost, to allow the filter to reset gracefully. */
   notifyMissing(): void {

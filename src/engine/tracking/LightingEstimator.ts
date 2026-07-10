@@ -1,4 +1,4 @@
-import { LightingEstimate } from '../types';
+import { LightingEstimate } from "../types";
 
 /**
  * Samples a coarse grid of pixels from an offscreen canvas already holding
@@ -8,7 +8,7 @@ import { LightingEstimate } from '../types';
 export function estimateLighting(
   ctx: CanvasRenderingContext2D,
   width: number,
-  height: number
+  height: number,
 ): LightingEstimate {
   const sampleStep = Math.max(8, Math.floor(Math.min(width, height) / 32));
   let rSum = 0;
@@ -33,7 +33,7 @@ export function estimateLighting(
         const g = row[i + 1];
         const b = row[i + 2];
         const luma = 0.299 * r + 0.587 * g + 0.114 * b;
-        
+
         rSum += r;
         gSum += g;
         bSum += b;
@@ -51,15 +51,26 @@ export function estimateLighting(
       }
     }
   } catch {
-    return { brightness: 180, contrast: 1, warmth: 0, lightDirection: { x: 0, y: 1 } };
+    return {
+      brightness: 180,
+      contrast: 1,
+      warmth: 0,
+      lightDirection: { x: 0, y: 1 },
+    };
   }
 
-  if (n === 0) return { brightness: 180, contrast: 1, warmth: 0, lightDirection: { x: 0, y: 1 } };
+  if (n === 0)
+    return {
+      brightness: 180,
+      contrast: 1,
+      warmth: 0,
+      lightDirection: { x: 0, y: 1 },
+    };
 
   const meanLuma = lumaSum / n;
   const variance = Math.max(0, lumaSumSq / n - meanLuma * meanLuma);
   const stdDev = Math.sqrt(variance);
-  const contrast = clamp(stdDev / 48, 0.6, 1.4); 
+  const contrast = clamp(stdDev / 48, 0.6, 1.4);
   const rMean = rSum / n;
   const bMean = bSum / n;
   const warmth = clamp((rMean - bMean) / 128, -1, 1);
@@ -67,19 +78,19 @@ export function estimateLighting(
   // Directional Light
   const leftMean = leftLumaSum / Math.max(1, leftCount);
   const rightMean = rightLumaSum / Math.max(1, rightCount);
-  
+
   // If left is brighter, light is coming from the left (negative x)
   const dx = (rightMean - leftMean) / 255;
-  
+
   // Normalize direction vector (assume overhead y by default)
   const dy = -0.5; // Always somewhat top-down
   const len = Math.sqrt(dx * dx + dy * dy);
 
-  return { 
-    brightness: meanLuma, 
-    contrast, 
+  return {
+    brightness: meanLuma,
+    contrast,
     warmth,
-    lightDirection: { x: dx / len, y: dy / len }
+    lightDirection: { x: dx / len, y: dy / len },
   };
 }
 

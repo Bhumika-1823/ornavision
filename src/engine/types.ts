@@ -9,9 +9,9 @@
  * processed `FrameState` object defined here.
  */
 
-import { NeckMetrics } from './tracking/NeckEstimator';
-import { PendantMetrics } from './anchors/PendantEngine';
-import { EarringMetrics } from './anchors/earringAnchor';
+import { NeckMetrics } from "./tracking/NeckEstimator";
+import { PendantMetrics } from "./anchors/PendantEngine";
+import { EarringMetrics } from "./anchors/earringAnchor";
 
 /** A single normalized landmark point, x/y in [0,1] relative to frame, z is depth (relative). */
 export interface Point3D {
@@ -79,7 +79,7 @@ export interface FaceState {
 export interface HandState {
   present: boolean;
   confidence: number;
-  handedness: 'Left' | 'Right' | 'Unknown';
+  handedness: "Left" | "Right" | "Unknown";
   landmarks: Point3D[];
   wrist: Point2D;
   /** Rough forearm/wrist orientation in radians (2D). */
@@ -89,7 +89,7 @@ export interface HandState {
   /** 3D Palm Center */
   palmCenter: Point3D;
   /** Per-finger metrics for ring placement. */
-  fingers: Record<'thumb' | 'index' | 'middle' | 'ring' | 'pinky', FingerState>;
+  fingers: Record<"thumb" | "index" | "middle" | "ring" | "pinky", FingerState>;
   palmWidthPx: number;
 }
 
@@ -100,7 +100,7 @@ export interface FingerState {
   pip3D: Point3D;
   /** 3D Tip */
   tip3D: Point3D;
-  
+
   /** 2D screen positions */
   mcp: Point2D;
   pip: Point2D;
@@ -108,20 +108,20 @@ export interface FingerState {
 
   /** Width of the proximal phalange in pixels */
   widthPx: number;
-  
+
   /** 2D angle on screen */
   angle: number;
-  
+
   /** Angle of curl relative to MCP-PIP vector. High value = curled into fist. */
   curlAngle: number;
-  
+
   /** True if the finger is deemed visible (not curled into palm or occluded by hand roll). */
   isVisible: boolean;
 }
 
 export interface WristState {
   present: boolean;
-  handedness: 'Left' | 'Right' | 'Unknown';
+  handedness: "Left" | "Right" | "Unknown";
   /** Center of the wrist joint */
   center: Point2D;
   /** Width of the wrist in pixels (inferred) */
@@ -172,7 +172,14 @@ export interface FrameState {
   lighting: LightingEstimate;
   neckMetrics?: NeckMetrics;
   pendantMetrics?: PendantMetrics;
-  earringMetrics?: { left: EarringMetrics | null; right: EarringMetrics | null };
+  earringMetrics?: {
+    left: EarringMetrics | null;
+    right: EarringMetrics | null;
+  };
 }
 
-export const EMPTY_LIGHTING: LightingEstimate = { brightness: 180, contrast: 1, warmth: 0 };
+export const EMPTY_LIGHTING: LightingEstimate = {
+  brightness: 180,
+  contrast: 1,
+  warmth: 0,
+};

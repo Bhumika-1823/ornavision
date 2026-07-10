@@ -1,9 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
-import { TryonEngine, EngineStartOptions } from '@/engine/TryonEngine';
-import { loadMetadataForProduct } from '@/engine/metadata/MetadataLoader';
-import { LegacyTryonMetadata } from '@/engine/metadata/legacyAdapter';
-import { RenderableItem } from '@/engine/render/JewelryRenderer';
-import { DEFAULT_USER_ADJUST } from '@/engine/anchors/UserAdjust';
+import { useEffect, useRef, useState } from "react";
+import { TryonEngine, EngineStartOptions } from "@/engine/TryonEngine";
+import { loadMetadataForProduct } from "@/engine/metadata/MetadataLoader";
+import { LegacyTryonMetadata } from "@/engine/metadata/legacyAdapter";
+import { RenderableItem } from "@/engine/render/JewelryRenderer";
+import { DEFAULT_USER_ADJUST } from "@/engine/anchors/UserAdjust";
 
 /**
  * Public shape kept identical to the pre-refactor hook so pages built
@@ -25,11 +25,11 @@ interface StartOptions {
   videoElement: HTMLVideoElement | null;
   canvasElement: HTMLCanvasElement | null;
   imageElement: HTMLImageElement | null;
-  mode: 'live' | 'photo';
+  mode: "live" | "photo";
 }
 
-import { FrameState } from '@/engine/types';
-import { TrackingManager } from '@/engine/tracking/TrackingManager';
+import { FrameState } from "@/engine/types";
+import { TrackingManager } from "@/engine/tracking/TrackingManager";
 
 export interface UseTryonEngineOptions {
   onFrameProcessed?: (frame: FrameState) => void;
@@ -42,16 +42,23 @@ export function useTryonEngine(opts?: UseTryonEngineOptions) {
   const engineRef = useRef<TryonEngine | null>(null);
 
   useEffect(() => {
-    const engine = new TryonEngine({
-      onError: (message) => setError(message),
-      onFrameProcessed: opts?.onFrameProcessed,
-    }, opts?.trackingManager);
+    const engine = new TryonEngine(
+      {
+        onError: (message) => setError(message),
+        onFrameProcessed: opts?.onFrameProcessed,
+      },
+      opts?.trackingManager,
+    );
     engineRef.current = engine;
 
     engine
       .init()
       .then(() => setIsLoaded(true))
-      .catch(() => setError('Failed to load AR engine dependencies. Please check connection.'));
+      .catch(() =>
+        setError(
+          "Failed to load AR engine dependencies. Please check connection.",
+        ),
+      );
 
     return () => {
       engine.stop();
@@ -61,7 +68,10 @@ export function useTryonEngine(opts?: UseTryonEngineOptions) {
   const setItems = (items: EquippedItem[]) => {
     const renderable: RenderableItem[] = [];
     for (const item of items) {
-      const metadata = loadMetadataForProduct({ id: item.key, tryonMetadata: item.metadata });
+      const metadata = loadMetadataForProduct({
+        id: item.key,
+        tryonMetadata: item.metadata,
+      });
       if (!metadata) continue;
       renderable.push({
         metadata,
@@ -91,7 +101,16 @@ export function useTryonEngine(opts?: UseTryonEngineOptions) {
     engineRef.current?.stop();
   };
 
-  return { isLoaded, error, startEngine, stopEngine, setItems, setBrightness, setDebugMode, engine: engineRef.current };
+  return {
+    isLoaded,
+    error,
+    startEngine,
+    stopEngine,
+    setItems,
+    setBrightness,
+    setDebugMode,
+    engine: engineRef.current,
+  };
 }
 
 export { DEFAULT_USER_ADJUST };

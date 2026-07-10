@@ -1,22 +1,29 @@
-import { JewelryMetadata } from '../metadata/JewelryMetadata';
-import { CanvasRenderer } from '../render/CanvasRenderer';
-import { JewelryRenderer } from '../render/JewelryRenderer';
-import { assetManager } from '../assets/AssetManager';
-import { FaceLibrary } from '../testing/FaceLibrary';
+import { JewelryMetadata } from "../metadata/JewelryMetadata";
+import { CanvasRenderer } from "../render/CanvasRenderer";
+import { JewelryRenderer } from "../render/JewelryRenderer";
+import { assetManager } from "../assets/AssetManager";
+import { FaceLibrary } from "../testing/FaceLibrary";
 
 export class PreviewGenerator {
-  
   /**
    * Generates a square webp thumbnail for catalog lists.
    */
-  static async generateThumbnail(metadata: JewelryMetadata, size = 256): Promise<string> {
-    const canvas = document.createElement('canvas');
+  static async generateThumbnail(
+    metadata: JewelryMetadata,
+    size = 256,
+  ): Promise<string> {
+    const canvas = document.createElement("canvas");
     canvas.width = size;
     canvas.height = size;
-    const ctx = canvas.getContext('2d')!;
-    
+    const ctx = canvas.getContext("2d")!;
+
     // Ensure asset is loaded
-    const bundle = assetManager.ensure(metadata.id, metadata.image, metadata.mask, metadata.shadow);
+    const bundle = assetManager.ensure(
+      metadata.id,
+      metadata.image,
+      metadata.mask,
+      metadata.shadow,
+    );
     await this.waitForImage(bundle.image);
 
     // Draw the raw image centered
@@ -28,49 +35,58 @@ export class PreviewGenerator {
     } else {
       drawW = size * imgAspect;
     }
-    
+
     const x = (size - drawW) / 2;
     const y = (size - drawH) / 2;
-    
+
     ctx.drawImage(bundle.image, x, y, drawW, drawH);
-    
-    return canvas.toDataURL('image/webp', 0.8);
+
+    return canvas.toDataURL("image/webp", 0.8);
   }
 
   /**
    * Generates a preview of the product worn by a synthetic "Average Face" mannequin.
    */
-  static async generateMannequinPreview(metadata: JewelryMetadata, width = 600, height = 800): Promise<string> {
-    const canvas = document.createElement('canvas');
+  static async generateMannequinPreview(
+    metadata: JewelryMetadata,
+    width = 600,
+    height = 800,
+  ): Promise<string> {
+    const canvas = document.createElement("canvas");
     canvas.width = width;
     canvas.height = height;
-    const ctx = canvas.getContext('2d')!;
-    
+    const ctx = canvas.getContext("2d")!;
+
     // Solid background for mannequin preview
-    ctx.fillStyle = '#f0f0f0';
+    ctx.fillStyle = "#f0f0f0";
     ctx.fillRect(0, 0, width, height);
-    
+
     const renderer = new CanvasRenderer(ctx);
     const jewelryRenderer = new JewelryRenderer(renderer);
-    
+
     // Ensure asset loaded
-    const bundle = assetManager.ensure(metadata.id, metadata.image, metadata.mask, metadata.shadow);
+    const bundle = assetManager.ensure(
+      metadata.id,
+      metadata.image,
+      metadata.mask,
+      metadata.shadow,
+    );
     await this.waitForImage(bundle.image);
 
     const syntheticFrame = FaceLibrary.getAverageFace();
-    
+
     // Adjust synthetic frame canvas dimensions
     syntheticFrame.width = width;
     syntheticFrame.height = height;
 
     const item = {
       metadata,
-      userAdjust: { scale: 1, offsetX: 0, offsetY: 0 }
+      userAdjust: { scale: 1, offsetX: 0, offsetY: 0 },
     };
 
     jewelryRenderer.renderAll([item], syntheticFrame, false);
-    
-    return canvas.toDataURL('image/webp', 0.9);
+
+    return canvas.toDataURL("image/webp", 0.9);
   }
 
   private static waitForImage(img: HTMLImageElement): Promise<void> {

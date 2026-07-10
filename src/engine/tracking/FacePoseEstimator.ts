@@ -1,4 +1,4 @@
-import { HeadPose, Point2D, Point3D } from '../types';
+import { HeadPose, Point2D, Point3D } from "../types";
 
 // MediaPipe FaceMesh landmark indices used throughout the engine.
 export const FACE_IDX = {
@@ -37,7 +37,11 @@ export function estimateYaw(landmarks: Point3D[], widthPx: number): number {
 
 /** Rough normalized pitch in [-1, 1] using nose-tip vertical offset vs. eye-to-chin span. */
 export function estimatePitch(landmarks: Point3D[], heightPx: number): number {
-  const eyeY = ((landmarks[FACE_IDX.leftEyeOuter].y + landmarks[FACE_IDX.rightEyeOuter].y) / 2) * heightPx;
+  const eyeY =
+    ((landmarks[FACE_IDX.leftEyeOuter].y +
+      landmarks[FACE_IDX.rightEyeOuter].y) /
+      2) *
+    heightPx;
   const chinY = landmarks[FACE_IDX.chin].y * heightPx;
   const noseY = landmarks[FACE_IDX.noseTip].y * heightPx;
   const span = chinY - eyeY;
@@ -46,7 +50,11 @@ export function estimatePitch(landmarks: Point3D[], heightPx: number): number {
   return clamp((noseY - mid) / (span * 0.5), -1, 1);
 }
 
-export function estimateHeadPose(landmarks: Point3D[], widthPx: number, heightPx: number): HeadPose {
+export function estimateHeadPose(
+  landmarks: Point3D[],
+  widthPx: number,
+  heightPx: number,
+): HeadPose {
   return {
     roll: estimateRoll(landmarks),
     yaw: estimateYaw(landmarks, widthPx),
@@ -60,7 +68,11 @@ export function faceWidthPx(landmarks: Point3D[], widthPx: number): number {
   return Math.hypot((r.x - l.x) * widthPx, (r.y - l.y) * widthPx);
 }
 
-export function eyeDistancePx(landmarks: Point3D[], widthPx: number, heightPx: number): number {
+export function eyeDistancePx(
+  landmarks: Point3D[],
+  widthPx: number,
+  heightPx: number,
+): number {
   const l = landmarks[FACE_IDX.leftEyeOuter];
   const r = landmarks[FACE_IDX.rightEyeOuter];
   return Math.hypot((r.x - l.x) * widthPx, (r.y - l.y) * heightPx);

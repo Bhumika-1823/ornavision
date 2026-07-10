@@ -1,4 +1,4 @@
-import { JewelryMetadata } from './JewelryMetadata';
+import { JewelryMetadata } from "./JewelryMetadata";
 
 export interface ProductPackageManifest {
   version: string;

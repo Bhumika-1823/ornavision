@@ -1,4 +1,4 @@
-import { loadScripts } from './ScriptLoader';
+import { loadScripts } from "./ScriptLoader";
 
 export class HandTracker {
   private model: any = null;
@@ -6,12 +6,16 @@ export class HandTracker {
   private ready = false;
 
   async load(): Promise<void> {
-    await loadScripts(['https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js']);
+    await loadScripts([
+      "https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js",
+    ]);
     // @ts-ignore
     const HandsCtor = (window as any).Hands;
     const smartLocateFile = (file: string) => {
-      if (file.includes('pose')) return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
-      if (file.includes('face_mesh')) return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+      if (file.includes("pose"))
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
+      if (file.includes("face_mesh"))
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
       return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
     };
 

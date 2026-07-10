@@ -1,9 +1,18 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { PRODUCTS } from '@/data/products';
-import { ShoppingBag, Star, ArrowRight, Play, Sparkles, MoveRight, ChevronDown, Heart } from 'lucide-react';
-import { Link } from 'wouter';
-import { motion } from 'framer-motion';
-import { useAppContext } from '@/context/AppContext';
+import React, { useEffect, useRef, useState } from "react";
+import { PRODUCTS } from "@/data/products";
+import {
+  ShoppingBag,
+  Star,
+  ArrowRight,
+  Play,
+  Sparkles,
+  MoveRight,
+  ChevronDown,
+  Heart,
+} from "lucide-react";
+import { Link } from "wouter";
+import { motion } from "framer-motion";
+import { useAppContext } from "@/context/AppContext";
 
 export default function HomePage() {
   const { addToCart, toggleWishlist, wishlist } = useAppContext();
@@ -19,9 +28,15 @@ export default function HomePage() {
           <div className="absolute top-0 right-0 w-[40vw] h-[40vw] bg-accent/5 rounded-full blur-[100px]"></div>
           <div className="absolute bottom-0 left-0 w-[50vw] h-[50vw] bg-yellow-900/10 rounded-full blur-[120px]"></div>
         </div>
-        
+
         {/* Noise overlay */}
-        <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
+        <div
+          className="absolute inset-0 opacity-[0.03] pointer-events-none"
+          style={{
+            backgroundImage:
+              'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")',
+          }}
+        ></div>
 
         <div className="relative z-10 container mx-auto px-4 text-center flex flex-col items-center">
           <motion.p
@@ -47,7 +62,8 @@ export default function HomePage() {
             className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto mb-10 font-light"
           >
             Experience the future of fine jewellery with our AI Virtual Try-On.
-            Discover pieces that resonate with your soul, from the comfort of your home.
+            Discover pieces that resonate with your soul, from the comfort of
+            your home.
           </motion.p>
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -79,30 +95,48 @@ export default function HomePage() {
       <section className="py-24 container mx-auto px-4 border-t border-border/30">
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h2 className="brand-font text-3xl md:text-4xl text-foreground mb-3">Curated Collections</h2>
-            <p className="text-muted-foreground text-sm uppercase tracking-widest">Masterpieces waiting to be discovered</p>
+            <h2 className="brand-font text-3xl md:text-4xl text-foreground mb-3">
+              Curated Collections
+            </h2>
+            <p className="text-muted-foreground text-sm uppercase tracking-widest">
+              Masterpieces waiting to be discovered
+            </p>
           </div>
-          <Link href="/shop" className="hidden md:flex items-center gap-2 text-primary text-sm tracking-wider uppercase hover:underline">
+          <Link
+            href="/shop"
+            className="hidden md:flex items-center gap-2 text-primary text-sm tracking-wider uppercase hover:underline"
+          >
             View All <MoveRight size={16} />
           </Link>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
           {[
-            { name: 'Necklaces', icon: '📿', slug: 'necklaces', count: 12 },
-            { name: 'Earrings', icon: '✨', slug: 'earrings', count: 18 },
-            { name: 'Rings', icon: '💍', slug: 'rings', count: 24 },
-            { name: 'Maang Tikkas', icon: '👑', slug: 'forehead-ornaments', count: 5 },
-            { name: 'Nose Rings', icon: '🌸', slug: 'nose-rings', count: 9 },
+            { name: "Necklaces", icon: "📿", slug: "necklaces", count: 12 },
+            { name: "Earrings", icon: "✨", slug: "earrings", count: 18 },
+            { name: "Rings", icon: "💍", slug: "rings", count: 24 },
+            {
+              name: "Maang Tikkas",
+              icon: "👑",
+              slug: "forehead-ornaments",
+              count: 5,
+            },
+            { name: "Nose Rings", icon: "🌸", slug: "nose-rings", count: 9 },
           ].map((cat, i) => (
             <Link key={cat.slug} href={`/shop?category=${cat.slug}`}>
               <motion.div
                 whileHover={{ y: -5, scale: 1.02 }}
                 className="glass-card aspect-square rounded-lg flex flex-col items-center justify-center p-6 text-center cursor-pointer group transition-all"
               >
-                <span className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">{cat.icon}</span>
-                <h3 className="brand-font text-sm md:text-base text-foreground mb-1 group-hover:text-primary transition-colors">{cat.name}</h3>
-                <p className="text-muted-foreground text-xs">{cat.count} pieces</p>
+                <span className="text-4xl mb-4 group-hover:scale-110 transition-transform duration-300 drop-shadow-[0_0_15px_rgba(212,175,55,0.3)]">
+                  {cat.icon}
+                </span>
+                <h3 className="brand-font text-sm md:text-base text-foreground mb-1 group-hover:text-primary transition-colors">
+                  {cat.name}
+                </h3>
+                <p className="text-muted-foreground text-xs">
+                  {cat.count} pieces
+                </p>
               </motion.div>
             </Link>
           ))}
@@ -113,8 +147,12 @@ export default function HomePage() {
       <section className="py-24 bg-card/30 border-y border-border/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="brand-font text-3xl md:text-4xl text-foreground mb-4">Featured Exclusives</h2>
-            <p className="text-muted-foreground text-sm uppercase tracking-widest max-w-xl mx-auto">The pinnacle of our craftsmanship</p>
+            <h2 className="brand-font text-3xl md:text-4xl text-foreground mb-4">
+              Featured Exclusives
+            </h2>
+            <p className="text-muted-foreground text-sm uppercase tracking-widest max-w-xl mx-auto">
+              The pinnacle of our craftsmanship
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -126,21 +164,43 @@ export default function HomePage() {
                       <Sparkles size={10} /> Try On
                     </div>
                   )}
-                  <button 
-                    onClick={(e) => { e.preventDefault(); toggleWishlist(product.id); }}
-                    aria-label={wishlist.includes(product.id) ? 'Remove from wishlist' : 'Add to wishlist'}
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault();
+                      toggleWishlist(product.id);
+                    }}
+                    aria-label={
+                      wishlist.includes(product.id)
+                        ? "Remove from wishlist"
+                        : "Add to wishlist"
+                    }
                     className="absolute top-3 right-3 z-10 w-8 h-8 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-foreground hover:text-primary transition-colors border border-border/50"
                   >
-                    <Heart size={16} fill={wishlist.includes(product.id) ? "currentColor" : "none"} className={wishlist.includes(product.id) ? "text-primary" : ""} />
+                    <Heart
+                      size={16}
+                      fill={
+                        wishlist.includes(product.id) ? "currentColor" : "none"
+                      }
+                      className={
+                        wishlist.includes(product.id) ? "text-primary" : ""
+                      }
+                    />
                   </button>
                   <Link href={`/shop/${product.slug}`}>
                     <div className="w-full h-full flex items-center justify-center p-6 mix-blend-screen bg-black">
-                      <img src={product.images[0]} alt={product.name} className="max-w-full max-h-full object-contain filter drop-shadow-2xl transition-transform duration-700 group-hover:scale-110" />
+                      <img
+                        src={product.images[0]}
+                        alt={product.name}
+                        className="max-w-full max-h-full object-contain filter drop-shadow-2xl transition-transform duration-700 group-hover:scale-110"
+                      />
                     </div>
                   </Link>
                   <div className="absolute inset-x-0 bottom-0 p-4 bg-gradient-to-t from-black/90 to-transparent translate-y-full group-hover:translate-y-0 transition-transform duration-300 flex justify-center">
-                    <button 
-                      onClick={(e) => { e.preventDefault(); addToCart(product.id); }}
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        addToCart(product.id);
+                      }}
                       className="w-full py-2 bg-primary text-black text-xs font-bold tracking-widest uppercase hover:brightness-110 flex items-center justify-center gap-2"
                     >
                       <ShoppingBag size={14} /> Add to Cart
@@ -150,13 +210,18 @@ export default function HomePage() {
                 <div>
                   <div className="flex justify-between items-start mb-1">
                     <Link href={`/shop/${product.slug}`}>
-                      <h3 className="brand-font text-lg text-foreground hover:text-primary transition-colors">{product.name}</h3>
+                      <h3 className="brand-font text-lg text-foreground hover:text-primary transition-colors">
+                        {product.name}
+                      </h3>
                     </Link>
                   </div>
                   <div className="flex justify-between items-center mt-2">
-                    <p className="text-primary font-medium tracking-wide">₹{product.price.toLocaleString()}</p>
+                    <p className="text-primary font-medium tracking-wide">
+                      ₹{product.price.toLocaleString()}
+                    </p>
                     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Star size={12} className="text-primary fill-primary" /> {product.ratingsAvg}
+                      <Star size={12} className="text-primary fill-primary" />{" "}
+                      {product.ratingsAvg}
                     </div>
                   </div>
                 </div>
@@ -175,15 +240,27 @@ export default function HomePage() {
         <div className="container mx-auto px-4 relative z-10 flex flex-col md:flex-row items-center">
           <div className="md:w-1/2 mb-10 md:mb-0">
             <h2 className="brand-font text-4xl md:text-6xl text-foreground mb-6 leading-tight">
-              VIRTUAL<br /> <span className="gold-gradient-text">JEWELLERY</span><br /> STUDIO
+              VIRTUAL
+              <br /> <span className="gold-gradient-text">JEWELLERY</span>
+              <br /> STUDIO
             </h2>
             <p className="text-muted-foreground text-lg mb-8 max-w-md font-light">
-              Experience the magic of fine jewellery without leaving your home. Our AI-powered Try-On Studio places our masterpieces on you in real-time.
+              Experience the magic of fine jewellery without leaving your home.
+              Our AI-powered Try-On Studio places our masterpieces on you in
+              real-time.
             </p>
             <ul className="flex flex-col gap-4 mb-10">
-              {['Real-time AR tracking', 'Pixel-perfect scaling', 'Compare multiple pieces'].map((feature, idx) => (
-                <li key={idx} className="flex items-center gap-3 text-sm tracking-wider uppercase text-foreground">
-                  <div className="w-1.5 h-1.5 rounded-full bg-primary"></div> {feature}
+              {[
+                "Real-time AR tracking",
+                "Pixel-perfect scaling",
+                "Compare multiple pieces",
+              ].map((feature, idx) => (
+                <li
+                  key={idx}
+                  className="flex items-center gap-3 text-sm tracking-wider uppercase text-foreground"
+                >
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary"></div>{" "}
+                  {feature}
                 </li>
               ))}
             </ul>
@@ -203,18 +280,19 @@ export default function HomePage() {
               </div>
               <div className="absolute top-4 left-4 right-4 flex justify-between items-center z-10">
                 <div className="bg-black/60 px-3 py-1.5 rounded text-[10px] tracking-widest uppercase text-primary border border-primary/30 flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div> Live
+                  <div className="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>{" "}
+                  Live
                 </div>
                 <div className="bg-black/60 p-2 rounded border border-white/10">
                   <ScanFace size={16} className="text-white/80" />
                 </div>
               </div>
               <div className="w-full h-full bg-secondary/80 flex items-center justify-center text-muted-foreground/30 overflow-hidden">
-                <video 
-                  src="/videos/brand_video.mp4" 
-                  autoPlay 
-                  loop 
-                  muted 
+                <video
+                  src="/videos/brand_video.mp4"
+                  autoPlay
+                  loop
+                  muted
                   playsInline
                   className="w-full h-full object-cover"
                 />
@@ -227,72 +305,119 @@ export default function HomePage() {
       {/* Testimonials */}
       <section className="py-24 container mx-auto px-4">
         <div className="text-center mb-16">
-          <h2 className="brand-font text-3xl md:text-4xl text-foreground mb-4">Client Reverie</h2>
-          <p className="text-muted-foreground text-sm uppercase tracking-widest max-w-xl mx-auto">Words from our esteemed patrons</p>
+          <h2 className="brand-font text-3xl md:text-4xl text-foreground mb-4">
+            Client Reverie
+          </h2>
+          <p className="text-muted-foreground text-sm uppercase tracking-widest max-w-xl mx-auto">
+            Words from our esteemed patrons
+          </p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {[
             {
-              quote: "The virtual try-on is an absolute game-changer. I bought the Royal Gold Choker and it fits exactly as shown on the camera overlay.",
+              quote:
+                "The virtual try-on is an absolute game-changer. I bought the Royal Gold Choker and it fits exactly as shown on the camera overlay.",
               author: "Sarah K.",
               product: "Royal Gold Choker",
             },
             {
-              quote: "I was skeptical about buying diamond studs online, but seeing them virtually made it so easy. The snapshot feature is brilliant.",
+              quote:
+                "I was skeptical about buying diamond studs online, but seeing them virtually made it so easy. The snapshot feature is brilliant.",
               author: "David M.",
               product: "Classic Solitaire Studs",
             },
             {
-              quote: "The Bridal Maang Tikka is absolutely breathtaking. My family couldn't believe how perfectly it suited me via the Try-On feature.",
+              quote:
+                "The Bridal Maang Tikka is absolutely breathtaking. My family couldn't believe how perfectly it suited me via the Try-On feature.",
               author: "Priya R.",
               product: "Bridal Maang Tikka",
-            }
+            },
           ].map((item, idx) => (
-            <div key={idx} className="glass-card p-8 rounded-xl flex flex-col justify-between">
+            <div
+              key={idx}
+              className="glass-card p-8 rounded-xl flex flex-col justify-between"
+            >
               <div>
                 <div className="flex gap-1 text-primary mb-6">
-                  {[...Array(5)].map((_, i) => <Star key={i} size={16} fill="currentColor" />)}
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} size={16} fill="currentColor" />
+                  ))}
                 </div>
-                <p className="text-foreground/90 font-light leading-relaxed mb-8 italic">"{item.quote}"</p>
+                <p className="text-foreground/90 font-light leading-relaxed mb-8 italic">
+                  "{item.quote}"
+                </p>
               </div>
               <div className="flex items-center gap-4 pt-6 border-t border-border/50">
                 <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center brand-font text-primary">
                   {item.author.charAt(0)}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold tracking-wider uppercase text-foreground">{item.author}</p>
-                  <p className="text-xs text-muted-foreground">Purchased: <span className="text-primary/80">{item.product}</span></p>
+                  <p className="text-sm font-semibold tracking-wider uppercase text-foreground">
+                    {item.author}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    Purchased:{" "}
+                    <span className="text-primary/80">{item.product}</span>
+                  </p>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </section>
-      
+
       {/* Footer */}
       <footer className="bg-secondary/30 border-t border-border/30 pt-20 pb-10">
         <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
           <div className="col-span-1 md:col-span-2">
-            <span className="brand-font text-2xl tracking-widest gold-gradient-text uppercase block mb-6">Ornavision</span>
+            <span className="brand-font text-2xl tracking-widest gold-gradient-text uppercase block mb-6">
+              Ornavision
+            </span>
             <p className="text-muted-foreground text-sm max-w-sm mb-6 leading-relaxed">
-              A sanctuary of uncompromising luxury. Discover and virtually try on the world's most exquisite jewellery from the comfort of your home.
+              A sanctuary of uncompromising luxury. Discover and virtually try
+              on the world's most exquisite jewellery from the comfort of your
+              home.
             </p>
           </div>
           <div>
             <h4 className="brand-font text-lg text-foreground mb-6">Explore</h4>
             <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <li><Link href="/shop" className="hover-gold transition-colors">All Collections</Link></li>
-              <li><Link href="/tryon" className="hover-gold transition-colors">Virtual Try-On</Link></li>
-              <li><Link href="/designer" className="hover-gold transition-colors">Custom Designer</Link></li>
+              <li>
+                <Link href="/shop" className="hover-gold transition-colors">
+                  All Collections
+                </Link>
+              </li>
+              <li>
+                <Link href="/tryon" className="hover-gold transition-colors">
+                  Virtual Try-On
+                </Link>
+              </li>
+              <li>
+                <Link href="/designer" className="hover-gold transition-colors">
+                  Custom Designer
+                </Link>
+              </li>
             </ul>
           </div>
           <div>
             <h4 className="brand-font text-lg text-foreground mb-6">Support</h4>
             <ul className="flex flex-col gap-3 text-sm text-muted-foreground">
-              <li><span className="hover-gold transition-colors cursor-pointer">Shipping & Returns</span></li>
-              <li><span className="hover-gold transition-colors cursor-pointer">Care Guide</span></li>
-              <li><span className="hover-gold transition-colors cursor-pointer">Contact Us</span></li>
+              <li>
+                <span className="hover-gold transition-colors cursor-pointer">
+                  Shipping & Returns
+                </span>
+              </li>
+              <li>
+                <span className="hover-gold transition-colors cursor-pointer">
+                  Care Guide
+                </span>
+              </li>
+              <li>
+                <span className="hover-gold transition-colors cursor-pointer">
+                  Contact Us
+                </span>
+              </li>
             </ul>
           </div>
         </div>

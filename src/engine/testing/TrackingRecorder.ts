@@ -1,4 +1,4 @@
-import { FrameState } from '../types';
+import { FrameState } from "../types";
 
 export class TrackingRecorder {
   private frames: FrameState[] = [];
@@ -23,11 +23,11 @@ export class TrackingRecorder {
     return JSON.stringify(this.frames);
   }
 
-  download(filename = 'tracking-data.json') {
+  download(filename = "tracking-data.json") {
     if (this.frames.length === 0) return;
-    const blob = new Blob([this.exportData()], { type: 'application/json' });
+    const blob = new Blob([this.exportData()], { type: "application/json" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
     a.download = filename;
     a.click();

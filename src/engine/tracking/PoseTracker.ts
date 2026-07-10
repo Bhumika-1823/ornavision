@@ -1,4 +1,4 @@
-import { loadScripts } from './ScriptLoader';
+import { loadScripts } from "./ScriptLoader";
 
 export class PoseTracker {
   private model: any = null;
@@ -6,12 +6,14 @@ export class PoseTracker {
   private ready = false;
 
   async load(): Promise<void> {
-    await loadScripts(['https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js']);
+    await loadScripts(["https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"]);
     // @ts-ignore
     const PoseCtor = (window as any).Pose;
     const smartLocateFile = (file: string) => {
-      if (file.includes('face_mesh')) return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
-      if (file.includes('hands')) return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
+      if (file.includes("face_mesh"))
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${file}`;
+      if (file.includes("hands"))
+        return `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`;
       return `https://cdn.jsdelivr.net/npm/@mediapipe/pose/${file}`;
     };
 

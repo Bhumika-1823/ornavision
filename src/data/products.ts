@@ -647,6 +647,46 @@ export const PRODUCTS: Product[] = [
   },
 ];
 
+export function getProductById(id: string): Product | undefined {
+  const p = PRODUCTS.find((p) => p.id === id);
+  if (p) return p;
+
+  if (id.startsWith("custom-")) {
+    try {
+      const customDataUrl = localStorage.getItem("ornavision_custom_tryon");
+      if (customDataUrl) {
+        return {
+          id,
+          name: "My Custom Design",
+          slug: id,
+          description: "Your unique masterpiece crafted in The Atelier.",
+          price: 999,
+          category: "Necklaces",
+          categorySlug: "necklaces",
+          stock: 1,
+          images: [customDataUrl],
+          tryonMetadata: {
+            type: "necklace",
+            overlayImage: customDataUrl,
+            scale: 2.5,
+            offsetY: -150,
+            offsetX: 0,
+          },
+          ratingsAvg: 5,
+          ratingsCount: 1,
+          isFeatured: false,
+          material: "Custom Blend",
+          weight: "Custom",
+          gemstone: "Mixed",
+        } as Product;
+      }
+    } catch {
+      // ignore
+    }
+  }
+  return undefined;
+}
+
 export const TESTIMONIALS = [
   {
     id: 1,

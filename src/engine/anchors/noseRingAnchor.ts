@@ -1,14 +1,19 @@
-import { JewelryMetadata } from '../metadata/JewelryMetadata';
-import { FrameState, Transform2D } from '../types';
-import { applyCalibration, baseTransform, computePerspectiveScaleX, heightForWidth } from './common';
-import { AssetBundle } from '../assets/AssetManager';
-import { UserAdjust } from './UserAdjust';
+import { JewelryMetadata } from "../metadata/JewelryMetadata";
+import { FrameState, Transform2D } from "../types";
+import {
+  applyCalibration,
+  baseTransform,
+  computePerspectiveScaleX,
+  heightForWidth,
+} from "./common";
+import { AssetBundle } from "../assets/AssetManager";
+import { UserAdjust } from "./UserAdjust";
 
 export function computeNoseRingTransform(
   meta: JewelryMetadata,
   frame: FrameState,
   asset: AssetBundle,
-  userAdjust: UserAdjust
+  userAdjust: UserAdjust,
 ): Transform2D | null {
   const { face } = frame;
   if (!face) return null;
@@ -18,7 +23,11 @@ export function computeNoseRingTransform(
   // Eye distance × 0.35 gives a good approximation of nose width.
   const noseWidth = face.eyeDistancePx * 0.35;
   let drawWidth = noseWidth * meta.defaultScale * userAdjust.scale;
-  let drawHeight = heightForWidth(drawWidth, asset.image.naturalWidth, asset.image.naturalHeight);
+  let drawHeight = heightForWidth(
+    drawWidth,
+    asset.image.naturalWidth,
+    asset.image.naturalHeight,
+  );
   const scaleX = computePerspectiveScaleX(meta, face.pose);
 
   const offsetX = meta.anchors.offsetUnits.x * noseWidth;
@@ -38,7 +47,7 @@ export function computeNoseRingTransform(
     scaleX,
   };
 
-  if (meta.id === 'traditional-maharashtrian-nath' && face.rightEar) {
+  if (meta.id === "traditional-maharashtrian-nath" && face.rightEar) {
     // Distance from nose to ear
     const dx = face.rightEar.x - anchor.x;
     const dy = face.rightEar.y - anchor.y;
@@ -46,7 +55,8 @@ export function computeNoseRingTransform(
 
     // Make the chain length (which is the width of the image) match the distance to the ear
     drawWidth = dist * userAdjust.scale * 1.05; // 5% slack
-    drawHeight = drawWidth * (asset.image.naturalHeight / asset.image.naturalWidth);
+    drawHeight =
+      drawWidth * (asset.image.naturalHeight / asset.image.naturalWidth);
 
     // The image has the ring on the left and chain pointing right.
     // We want the rightward chain to point to the ear.
@@ -59,8 +69,16 @@ export function computeNoseRingTransform(
     // We want the ring (left edge, x=0 or roughly 5% in) to be at the anchor.
     // The vector from the ring to the center is (drawWidth * 0.45) in the direction of the ear.
     const centerOffsetDist = 0.45 * drawWidth;
-    transform.x = anchor.x + Math.cos(angleToEar) * centerOffsetDist + offsetX + userAdjust.offsetX;
-    transform.y = anchor.y + Math.sin(angleToEar) * centerOffsetDist + offsetY + userAdjust.offsetY;
+    transform.x =
+      anchor.x +
+      Math.cos(angleToEar) * centerOffsetDist +
+      offsetX +
+      userAdjust.offsetX;
+    transform.y =
+      anchor.y +
+      Math.sin(angleToEar) * centerOffsetDist +
+      offsetY +
+      userAdjust.offsetY;
   }
 
   transform = applyCalibration(meta, transform);

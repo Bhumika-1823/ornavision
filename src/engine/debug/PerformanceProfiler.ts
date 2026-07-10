@@ -19,7 +19,7 @@ export class PerformanceProfiler {
   private driftCursor = 0;
   private qualityBuffer: number[] = new Array(WINDOW).fill(0);
   private qualityCursor = 0;
-  
+
   private pendantSwingBuffer: number[] = new Array(WINDOW).fill(0);
   private pendantSwingCursor = 0;
   private pendantDriftBuffer: number[] = new Array(WINDOW).fill(0);
@@ -75,11 +75,11 @@ export class PerformanceProfiler {
     return valid.reduce((a, b) => a + b, 0) / valid.length;
   }
 
-  snapshot(): { 
-    fps: number; 
-    stages: Record<string, number>; 
-    memoryMB?: number; 
-    averageDrift?: number; 
+  snapshot(): {
+    fps: number;
+    stages: Record<string, number>;
+    memoryMB?: number;
+    averageDrift?: number;
     averageQuality?: number;
     averagePendantSwing?: number;
     averagePendantDrift?: number;
@@ -93,44 +93,74 @@ export class PerformanceProfiler {
       stages[name] = this.getStageAvgMs(name);
     }
     const mem = (performance as any).memory;
-    const memoryMB = mem ? Math.round(mem.usedJSHeapSize / (1024 * 1024)) : undefined;
+    const memoryMB = mem
+      ? Math.round(mem.usedJSHeapSize / (1024 * 1024))
+      : undefined;
 
-    const validDrift = this.driftBuffer.filter(v => v > 0);
-    const averageDrift = validDrift.length > 0 ? validDrift.reduce((a, b) => a + b, 0) / validDrift.length : undefined;
-    
-    const validQuality = this.qualityBuffer.filter(v => v > 0);
-    const averageQuality = validQuality.length > 0 ? validQuality.reduce((a, b) => a + b, 0) / validQuality.length : undefined;
+    const validDrift = this.driftBuffer.filter((v) => v > 0);
+    const averageDrift =
+      validDrift.length > 0
+        ? validDrift.reduce((a, b) => a + b, 0) / validDrift.length
+        : undefined;
 
-    const validPendantSwing = this.pendantSwingBuffer.filter(v => v !== 0);
-    const averagePendantSwing = validPendantSwing.length > 0 ? validPendantSwing.reduce((a, b) => a + Math.abs(b), 0) / validPendantSwing.length : undefined;
+    const validQuality = this.qualityBuffer.filter((v) => v > 0);
+    const averageQuality =
+      validQuality.length > 0
+        ? validQuality.reduce((a, b) => a + b, 0) / validQuality.length
+        : undefined;
 
-    const validPendantDrift = this.pendantDriftBuffer.filter(v => v > 0);
-    const averagePendantDrift = validPendantDrift.length > 0 ? validPendantDrift.reduce((a, b) => a + b, 0) / validPendantDrift.length : undefined;
+    const validPendantSwing = this.pendantSwingBuffer.filter((v) => v !== 0);
+    const averagePendantSwing =
+      validPendantSwing.length > 0
+        ? validPendantSwing.reduce((a, b) => a + Math.abs(b), 0) /
+          validPendantSwing.length
+        : undefined;
 
-    const validEarringSwing = this.earringSwingBuffer.filter(v => v !== 0);
-    const averageEarringSwing = validEarringSwing.length > 0 ? validEarringSwing.reduce((a, b) => a + Math.abs(b), 0) / validEarringSwing.length : undefined;
+    const validPendantDrift = this.pendantDriftBuffer.filter((v) => v > 0);
+    const averagePendantDrift =
+      validPendantDrift.length > 0
+        ? validPendantDrift.reduce((a, b) => a + b, 0) /
+          validPendantDrift.length
+        : undefined;
 
-    const validEarringDrift = this.earringDriftBuffer.filter(v => v > 0);
-    const averageEarringDrift = validEarringDrift.length > 0 ? validEarringDrift.reduce((a, b) => a + b, 0) / validEarringDrift.length : undefined;
+    const validEarringSwing = this.earringSwingBuffer.filter((v) => v !== 0);
+    const averageEarringSwing =
+      validEarringSwing.length > 0
+        ? validEarringSwing.reduce((a, b) => a + Math.abs(b), 0) /
+          validEarringSwing.length
+        : undefined;
 
-    const validEarringVis = this.earringVisBuffer.filter(v => v > 0);
-    const averageEarringVis = validEarringVis.length > 0 ? validEarringVis.reduce((a, b) => a + b, 0) / validEarringVis.length : undefined;
+    const validEarringDrift = this.earringDriftBuffer.filter((v) => v > 0);
+    const averageEarringDrift =
+      validEarringDrift.length > 0
+        ? validEarringDrift.reduce((a, b) => a + b, 0) /
+          validEarringDrift.length
+        : undefined;
 
-    const validMaskFps = this.maskFpsBuffer.filter(v => v > 0);
-    const maskFps = validMaskFps.length > 0 ? validMaskFps.reduce((a, b) => a + b, 0) / validMaskFps.length : undefined;
+    const validEarringVis = this.earringVisBuffer.filter((v) => v > 0);
+    const averageEarringVis =
+      validEarringVis.length > 0
+        ? validEarringVis.reduce((a, b) => a + b, 0) / validEarringVis.length
+        : undefined;
 
-    return { 
-      fps: this.getFps(), 
-      stages, 
-      memoryMB, 
-      averageDrift, 
+    const validMaskFps = this.maskFpsBuffer.filter((v) => v > 0);
+    const maskFps =
+      validMaskFps.length > 0
+        ? validMaskFps.reduce((a, b) => a + b, 0) / validMaskFps.length
+        : undefined;
+
+    return {
+      fps: this.getFps(),
+      stages,
+      memoryMB,
+      averageDrift,
       averageQuality,
       averagePendantSwing,
       averagePendantDrift,
       averageEarringSwing,
       averageEarringDrift,
       averageEarringVis,
-      maskFps
+      maskFps,
     };
   }
 

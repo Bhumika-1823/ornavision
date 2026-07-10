@@ -104,7 +104,12 @@ export class OneEuroPointFilter {
     this.fz.reset();
   }
 
-  filter(x: number, y: number, z: number, t: number): { x: number; y: number; z: number } {
+  filter(
+    x: number,
+    y: number,
+    z: number,
+    t: number,
+  ): { x: number; y: number; z: number } {
     return {
       x: this.fx.filter(x, t),
       y: this.fy.filter(y, t),

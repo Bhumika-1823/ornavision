@@ -1,9 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'wouter';
-import { ShoppingBag, Heart, Menu, X, ChevronDown, Wand2, Scissors } from 'lucide-react';
-import { useAppContext } from '@/context/AppContext';
-import { CATEGORIES } from '@/data/products';
-import { motion, AnimatePresence } from 'framer-motion';
+import React, { useState, useEffect } from "react";
+import { Link, useLocation } from "wouter";
+import {
+  ShoppingBag,
+  Heart,
+  Menu,
+  X,
+  ChevronDown,
+  Wand2,
+  Scissors,
+} from "lucide-react";
+import { useAppContext } from "@/context/AppContext";
+import { CATEGORIES } from "@/data/products";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -16,8 +24,8 @@ export default function Navbar() {
     const handleScroll = () => {
       setScrolled(window.scrollY > 20);
     };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
   useEffect(() => {
@@ -29,8 +37,8 @@ export default function Navbar() {
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
           scrolled
-            ? 'bg-background/90 backdrop-blur-md border-b border-border/50 py-3 shadow-lg'
-            : 'bg-gradient-to-b from-black/80 to-transparent py-5'
+            ? "bg-background/90 backdrop-blur-md border-b border-border/50 py-3 shadow-lg"
+            : "bg-gradient-to-b from-black/80 to-transparent py-5"
         }`}
       >
         <div className="container mx-auto px-4 md:px-6 flex items-center justify-between">
@@ -49,7 +57,10 @@ export default function Navbar() {
           </div>
 
           <nav className="hidden md:flex items-center gap-8">
-            <Link href="/" className="text-sm tracking-wider uppercase hover-gold transition-colors">
+            <Link
+              href="/"
+              className="text-sm tracking-wider uppercase hover-gold transition-colors"
+            >
               Home
             </Link>
             <div
@@ -103,7 +114,10 @@ export default function Navbar() {
           </nav>
 
           <div className="flex items-center gap-5">
-            <Link href="/wishlist" className="relative text-foreground hover-gold transition-colors">
+            <Link
+              href="/wishlist"
+              className="relative text-foreground hover-gold transition-colors"
+            >
               <Heart size={20} />
               {wishlist.length > 0 && (
                 <span className="absolute -top-2 -right-2 bg-primary text-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
@@ -111,7 +125,10 @@ export default function Navbar() {
                 </span>
               )}
             </Link>
-            <Link href="/cart" className="relative text-foreground hover-gold transition-colors">
+            <Link
+              href="/cart"
+              className="relative text-foreground hover-gold transition-colors"
+            >
               <ShoppingBag size={20} />
               {cartCount > 0 && (
                 <span className="absolute -top-2 -right-2 bg-primary text-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
@@ -127,23 +144,34 @@ export default function Navbar() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ x: '-100%' }}
+            initial={{ x: "-100%" }}
             animate={{ x: 0 }}
-            exit={{ x: '-100%' }}
-            transition={{ type: 'spring', damping: 25, stiffness: 200 }}
+            exit={{ x: "-100%" }}
+            transition={{ type: "spring", damping: 25, stiffness: 200 }}
             className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-xl flex flex-col md:hidden border-r border-border/50 max-w-[80%]"
           >
             <div className="p-5 flex items-center justify-between border-b border-border/50">
-              <span className="brand-font text-xl gold-gradient-text uppercase">Ornavision</span>
-              <button className="text-foreground" onClick={() => setMobileMenuOpen(false)}>
+              <span className="brand-font text-xl gold-gradient-text uppercase">
+                Ornavision
+              </span>
+              <button
+                className="text-foreground"
+                onClick={() => setMobileMenuOpen(false)}
+              >
                 <X size={24} />
               </button>
             </div>
             <div className="flex flex-col py-6 px-4 gap-6 overflow-y-auto">
-              <Link href="/" className="text-lg uppercase tracking-widest brand-font">
+              <Link
+                href="/"
+                className="text-lg uppercase tracking-widest brand-font"
+              >
                 Home
               </Link>
-              <Link href="/shop" className="text-lg uppercase tracking-widest brand-font">
+              <Link
+                href="/shop"
+                className="text-lg uppercase tracking-widest brand-font"
+              >
                 Shop All
               </Link>
               <div className="flex flex-col gap-3 pl-4 border-l border-border/30">

@@ -1,12 +1,18 @@
-import React, { createContext, useContext, useState, useEffect, useMemo } from 'react';
-import { PRODUCTS } from '@/data/products';
+import React, {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  useMemo,
+} from "react";
+import { PRODUCTS, getProductById } from "@/data/products";
 
 export interface OrderType {
   id: string;
   date: string;
   customer: string;
   amount: number;
-  status: 'Processing' | 'Shipped' | 'Delivered' | 'Refunded';
+  status: "Processing" | "Shipped" | "Delivered" | "Refunded";
 }
 
 interface CartItem {
@@ -39,7 +45,7 @@ const AppContext = createContext<AppState | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
-      const saved = localStorage.getItem('ornavision_cart');
+      const saved = localStorage.getItem("ornavision_cart");
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -48,46 +54,82 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const [orders, setOrders] = useState<OrderType[]>(() => {
     try {
-      const saved = localStorage.getItem('ornavision_orders');
+      const saved = localStorage.getItem("ornavision_orders");
       if (saved) return JSON.parse(saved);
     } catch {}
     // Initial mock data if empty
     return [
-      { id: 'ORD-8923', date: '2026-07-10', customer: 'Sarah Jenkins', amount: 850, status: 'Processing' },
-      { id: 'ORD-8922', date: '2026-07-09', customer: 'Michael Chen', amount: 450, status: 'Shipped' },
-      { id: 'ORD-8921', date: '2026-07-08', customer: 'Priya Sharma', amount: 1250, status: 'Delivered' },
-      { id: 'ORD-8920', date: '2026-07-08', customer: 'David Miller', amount: 320, status: 'Delivered' },
-      { id: 'ORD-8919', date: '2026-07-07', customer: 'Emma Lewis', amount: 850, status: 'Refunded' },
-      { id: 'ORD-8918', date: '2026-07-05', customer: 'James Wilson', amount: 1100, status: 'Delivered' },
+      {
+        id: "ORD-8923",
+        date: "2026-07-10",
+        customer: "Sarah Jenkins",
+        amount: 850,
+        status: "Processing",
+      },
+      {
+        id: "ORD-8922",
+        date: "2026-07-09",
+        customer: "Michael Chen",
+        amount: 450,
+        status: "Shipped",
+      },
+      {
+        id: "ORD-8921",
+        date: "2026-07-08",
+        customer: "Priya Sharma",
+        amount: 1250,
+        status: "Delivered",
+      },
+      {
+        id: "ORD-8920",
+        date: "2026-07-08",
+        customer: "David Miller",
+        amount: 320,
+        status: "Delivered",
+      },
+      {
+        id: "ORD-8919",
+        date: "2026-07-07",
+        customer: "Emma Lewis",
+        amount: 850,
+        status: "Refunded",
+      },
+      {
+        id: "ORD-8918",
+        date: "2026-07-05",
+        customer: "James Wilson",
+        amount: 1100,
+        status: "Delivered",
+      },
     ];
   });
 
   const [wishlist, setWishlist] = useState<string[]>(() => {
     try {
-      const saved = localStorage.getItem('ornavision_wishlist');
+      const saved = localStorage.getItem("ornavision_wishlist");
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
     }
   });
 
-  const [couponCode, setCouponCode] = useState('');
+  const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('ornavision_cart', JSON.stringify(cart));
+    localStorage.setItem("ornavision_cart", JSON.stringify(cart));
   }, [cart]);
 
   useEffect(() => {
-    localStorage.setItem('ornavision_wishlist', JSON.stringify(wishlist));
+    localStorage.setItem("ornavision_wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
   useEffect(() => {
-    localStorage.setItem('ornavision_orders', JSON.stringify(orders));
+    localStorage.setItem("ornavision_orders", JSON.stringify(orders));
   }, [orders]);
 
   const placeOrder = (order: OrderType) => {
-    setOrders(prev => [order, ...prev]);
+    setOrders((prev) => [order, ...prev]);
   };
 
   const addToCart = (productId: string, qty = 1) => {
@@ -95,7 +137,9 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const existing = prev.find((item) => item.productId === productId);
       if (existing) {
         return prev.map((item) =>
-          item.productId === productId ? { ...item, quantity: item.quantity + qty } : item
+          item.productId === productId
+            ? { ...item, quantity: item.quantity + qty }
+            : item,
         );
       }
       return [...prev, { productId, quantity: qty }];
@@ -112,18 +156,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       return;
     }
     setCart((prev) =>
-      prev.map((item) => (item.productId === productId ? { ...item, quantity: qty } : item))
+      prev.map((item) =>
+        item.productId === productId ? { ...item, quantity: qty } : item,
+      ),
     );
   };
 
   const clearCart = () => {
     setCart([]);
-    setCouponCode('');
+    setCouponCode("");
     setCouponApplied(false);
   };
 
   // Valid coupons: ORNA10 = 10% off
-  const VALID_COUPONS: Record<string, number> = { 'ORNA10': 0.1 };
+  const VALID_COUPONS: Record<string, number> = { ORNA10: 0.1 };
 
   const applyCoupon = (code: string): boolean => {
     const rate = VALID_COUPONS[code.toUpperCase()];
@@ -136,7 +182,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const removeCoupon = () => {
-    setCouponCode('');
+    setCouponCode("");
     setCouponApplied(false);
   };
 
@@ -144,15 +190,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setWishlist((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
+        : [...prev, productId],
     );
   };
 
-  const cartCount = useMemo(() => cart.reduce((acc, item) => acc + item.quantity, 0), [cart]);
+  const cartCount = useMemo(
+    () => cart.reduce((acc, item) => acc + item.quantity, 0),
+    [cart],
+  );
 
   const cartTotal = useMemo(() => {
     return cart.reduce((acc, item) => {
-      const product = PRODUCTS.find((p) => p.id === item.productId);
+      const product = getProductById(item.productId);
       return acc + (product?.price || 0) * item.quantity;
     }, 0);
   }, [cart]);
@@ -160,7 +209,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const COUPON_RATE = 0.1; // 10% for ORNA10
   const couponDiscount = useMemo(
     () => (couponApplied ? cartTotal * COUPON_RATE : 0),
-    [couponApplied, cartTotal]
+    [couponApplied, cartTotal],
   );
 
   return (
@@ -192,7 +241,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 export function useAppContext() {
   const context = useContext(AppContext);
   if (context === undefined) {
-    throw new Error('useAppContext must be used within an AppProvider');
+    throw new Error("useAppContext must be used within an AppProvider");
   }
   return context;
 }

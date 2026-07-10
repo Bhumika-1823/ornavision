@@ -1,7 +1,7 @@
-import { AssetBundle } from '../assets/AssetManager';
-import { JewelryMetadata } from '../metadata/JewelryMetadata';
-import { LightingEstimate, Transform2D } from '../types';
-import { CapabilityManager } from '../core/CapabilityManager';
+import { AssetBundle } from "../assets/AssetManager";
+import { JewelryMetadata } from "../metadata/JewelryMetadata";
+import { LightingEstimate, Transform2D } from "../types";
+import { CapabilityManager } from "../core/CapabilityManager";
 
 export interface DrawSourceOptions {
   mirror: boolean; // live camera selfie-mirror
@@ -18,7 +18,7 @@ export class CanvasRenderer {
     if (this.ctx) {
       // RC6: High quality image scaling
       this.ctx.imageSmoothingEnabled = true;
-      this.ctx.imageSmoothingQuality = 'high';
+      this.ctx.imageSmoothingQuality = "high";
     }
   }
 
@@ -34,7 +34,7 @@ export class CanvasRenderer {
     source: HTMLVideoElement | HTMLImageElement,
     w: number,
     h: number,
-    opts: DrawSourceOptions
+    opts: DrawSourceOptions,
   ): void {
     const ctx = this.ctx;
     ctx.save();
@@ -57,7 +57,7 @@ export class CanvasRenderer {
     meta: JewelryMetadata,
     transform: Transform2D,
     lighting: LightingEstimate,
-    mirror: boolean
+    mirror: boolean,
   ): void {
     if (!transform.visible || transform.opacity <= 0.01) return;
     const ctx = this.ctx;
@@ -76,13 +76,13 @@ export class CanvasRenderer {
 
     ctx.translate(transform.x, transform.y);
     ctx.rotate(transform.rotation);
-    
+
     // RC6: scaleY support for perspective pitch
     const sy = transform.scaleY ?? 1;
     ctx.scale(transform.flipX ? -transform.scaleX : transform.scaleX, sy);
-    
+
     ctx.globalAlpha = transform.opacity;
-    
+
     // RC6: Advanced Filtering & Post Processing
     ctx.filter = buildLightingFilter(meta, lighting);
 
@@ -99,7 +99,7 @@ export class CanvasRenderer {
     ctx.drawImage(img, -pivotX, -pivotY, width, height);
 
     // Clear shadow so it doesn't affect subsequent operations
-    ctx.shadowColor = 'transparent';
+    ctx.shadowColor = "transparent";
     ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
@@ -107,9 +107,13 @@ export class CanvasRenderer {
     const caps = CapabilityManager.get();
 
     // RC6: Bloom post-process
-    if (caps.canUseBloom && meta.postProcess?.bloom && meta.postProcess.bloom > 0) {
+    if (
+      caps.canUseBloom &&
+      meta.postProcess?.bloom &&
+      meta.postProcess.bloom > 0
+    ) {
       ctx.save();
-      ctx.globalCompositeOperation = 'screen';
+      ctx.globalCompositeOperation = "screen";
       ctx.filter = `blur(${meta.postProcess.bloom * 8}px)`;
       ctx.globalAlpha = transform.opacity * meta.postProcess.bloom;
       ctx.drawImage(img, -pivotX, -pivotY, width, height);
@@ -118,23 +122,34 @@ export class CanvasRenderer {
 
     // RC6: Reflection System
     // We favor the new ReflectionSpec, falling back to legacy boolean
-    const isReflective = meta.reflectionSpec || meta.reflection || meta.lighting.reflective;
-    if (caps.canUseReflections && isReflective && lighting.brightness > 100) { // Slightly lower threshold for reflections
-      drawReflectionHighlight(ctx, width, height, lighting, meta.reflectionSpec);
+    const isReflective =
+      meta.reflectionSpec || meta.reflection || meta.lighting.reflective;
+    if (caps.canUseReflections && isReflective && lighting.brightness > 100) {
+      // Slightly lower threshold for reflections
+      drawReflectionHighlight(
+        ctx,
+        width,
+        height,
+        lighting,
+        meta.reflectionSpec,
+      );
     }
 
     ctx.restore();
   }
 }
 
-function buildLightingFilter(meta: JewelryMetadata, lighting: LightingEstimate): string {
+function buildLightingFilter(
+  meta: JewelryMetadata,
+  lighting: LightingEstimate,
+): string {
   const { brightnessResponse, contrastResponse } = meta.lighting;
-  
+
   // Ambient brightness (0-255, ~180 "typical")
   const brightnessRatio = lighting.brightness / 180;
   const brightnessMul = 1 + (brightnessRatio - 1) * brightnessResponse;
   const contrastMul = 1 + (lighting.contrast - 1) * contrastResponse;
-  
+
   let filterStr = `brightness(${(brightnessMul * 100).toFixed(1)}%) contrast(${(contrastMul * 100).toFixed(1)}%)`;
 
   // RC6: Gamma and Warmth (Color Temp)
@@ -142,7 +157,7 @@ function buildLightingFilter(meta: JewelryMetadata, lighting: LightingEstimate):
     // A cheap way to emulate gamma in Canvas 2D is layering brightness/contrast, but CSS filter doesn't have true gamma.
     // We can use SVG filters eventually, but for now we adjust brightness non-linearly.
   }
-  
+
   if (lighting.warmth !== 0) {
     // Warmth: -1 (cool) to 1 (warm). We can simulate this with sepia or hue-rotate
     if (lighting.warmth > 0.1) {
@@ -160,41 +175,46 @@ function drawReflectionHighlight(
   width: number,
   height: number,
   lighting: LightingEstimate,
-  spec?: import('../metadata/JewelryMetadata').ReflectionSpec
+  spec?: import("../metadata/JewelryMetadata").ReflectionSpec,
 ): void {
   // Intensity is affected by ambient brightness, clamped to spec.intensity
   const maxIntensity = spec?.intensity ?? 0.25;
   const intensity = Math.min(maxIntensity, (lighting.brightness - 100) / 400);
   if (intensity <= 0) return;
 
-  const mode = spec?.mode ?? 'silver';
-  const highlightColor = spec?.color ?? '255,255,255'; // RGB string
+  const mode = spec?.mode ?? "silver";
+  const highlightColor = spec?.color ?? "255,255,255"; // RGB string
 
   // Light direction vector to angle the gradient
   const lx = lighting.lightDirection?.x ?? 0.5;
   const ly = lighting.lightDirection?.y ?? -0.5;
-  
+
   // Angle of light
   const angle = Math.atan2(ly, lx);
 
   ctx.save();
-  ctx.globalCompositeOperation = mode === 'gold' ? 'overlay' : (mode === 'diamond' ? 'color-dodge' : 'overlay');
-  
+  ctx.globalCompositeOperation =
+    mode === "gold"
+      ? "overlay"
+      : mode === "diamond"
+        ? "color-dodge"
+        : "overlay";
+
   const radius = Math.max(width, height);
   // Create gradient perpendicular to light direction
   const x1 = Math.cos(angle) * radius;
   const y1 = Math.sin(angle) * radius;
-  
+
   const gradient = ctx.createLinearGradient(-x1, -y1, x1, y1);
-  
-  if (mode === 'diamond') {
+
+  if (mode === "diamond") {
     // Sharp glints
     gradient.addColorStop(0, `rgba(${highlightColor},0)`);
     gradient.addColorStop(0.48, `rgba(${highlightColor},0)`);
     gradient.addColorStop(0.5, `rgba(${highlightColor},${intensity * 1.5})`);
     gradient.addColorStop(0.52, `rgba(${highlightColor},0)`);
     gradient.addColorStop(1, `rgba(${highlightColor},0)`);
-  } else if (mode === 'gold') {
+  } else if (mode === "gold") {
     // Warm, broad reflection
     gradient.addColorStop(0, `rgba(255,220,150,0)`);
     gradient.addColorStop(0.5, `rgba(255,240,180,${intensity})`);

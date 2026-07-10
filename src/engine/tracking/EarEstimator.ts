@@ -1,4 +1,4 @@
-import { FrameState, Point2D } from '../types';
+import { FrameState, Point2D } from "../types";
 
 export interface EarMetrics {
   leftEar: Point2D;
@@ -49,15 +49,23 @@ export class EarEstimator {
     // Tracking Quality
     // Degrades if face confidence is low, or if ears are off-screen
     let quality = face.confidence;
-    
+
     // Check boundaries (very rough heuristic)
     const margin = face.faceWidthPx * 0.1;
-    if (face.leftEar.x < -margin || face.leftEar.x > frame.width + margin ||
-        face.leftEar.y < -margin || face.leftEar.y > frame.height + margin) {
+    if (
+      face.leftEar.x < -margin ||
+      face.leftEar.x > frame.width + margin ||
+      face.leftEar.y < -margin ||
+      face.leftEar.y > frame.height + margin
+    ) {
       quality *= 0.5;
     }
-    if (face.rightEar.x < -margin || face.rightEar.x > frame.width + margin ||
-        face.rightEar.y < -margin || face.rightEar.y > frame.height + margin) {
+    if (
+      face.rightEar.x < -margin ||
+      face.rightEar.x > frame.width + margin ||
+      face.rightEar.y < -margin ||
+      face.rightEar.y > frame.height + margin
+    ) {
       quality *= 0.5;
     }
 
@@ -71,7 +79,7 @@ export class EarEstimator {
       headPitch: pitch,
       faceWidthPx: face.faceWidthPx,
       trackingQuality: Math.max(0, quality),
-      jawAngle
+      jawAngle,
     };
   }
 }

@@ -5,4 +5,8 @@ export interface UserAdjust {
   offsetY: number;
 }
 
-export const DEFAULT_USER_ADJUST: UserAdjust = { scale: 1, offsetX: 0, offsetY: 0 };
+export const DEFAULT_USER_ADJUST: UserAdjust = {
+  scale: 1,
+  offsetX: 0,
+  offsetY: 0,
+};

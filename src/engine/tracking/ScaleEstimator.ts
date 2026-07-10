@@ -1,4 +1,4 @@
-import { Point2D } from '../types';
+import { Point2D } from "../types";
 
 /** Euclidean distance between two pixel-space points. */
 export function dist(a: Point2D, b: Point2D): number {
@@ -10,7 +10,10 @@ export function dist(a: Point2D, b: Point2D): number {
  * available) so necklace/bracelet sizing stays consistent even if the face
  * briefly loses tracking confidence but the body doesn't.
  */
-export function bodyScaleReference(faceWidthPx: number, shoulderWidthPx: number | null): number {
+export function bodyScaleReference(
+  faceWidthPx: number,
+  shoulderWidthPx: number | null,
+): number {
   if (!shoulderWidthPx || shoulderWidthPx <= 0) return faceWidthPx;
   // Empirical ratio: shoulder width is typically ~2.6-3x face width for an average adult
   // facing the camera. Blend the two so a partially-turned body doesn't over-scale jewelry.

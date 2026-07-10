@@ -1,4 +1,4 @@
-import { FrameState, Point2D } from '../types';
+import { FrameState, Point2D } from "../types";
 
 export interface NeckMetrics {
   neckCenter: Point2D;
@@ -26,30 +26,30 @@ export class NeckEstimator {
 
     // Base neck anchor from face (usually base of jaw)
     let neckCenter = face.neckAnchor;
-    
+
     // Approximate neck width based on face/jaw width
     const neckWidthPx = face.faceWidthPx * 0.75;
-    
+
     // Neck angle in screen space (tilt)
     const neckAngle = face.pose.roll;
-    
+
     // Neck rotation in 3D (yaw)
     const neckRotation = face.pose.yaw;
 
     // Body fallbacks if body tracking is missing
     let chestCenter: Point2D = {
       x: neckCenter.x,
-      y: neckCenter.y + face.faceWidthPx * 1.5
+      y: neckCenter.y + face.faceWidthPx * 1.5,
     };
-    
+
     let leftShoulder: Point2D = {
       x: neckCenter.x - face.faceWidthPx * 1.2,
-      y: neckCenter.y + face.faceWidthPx * 0.8
+      y: neckCenter.y + face.faceWidthPx * 0.8,
     };
-    
+
     let rightShoulder: Point2D = {
       x: neckCenter.x + face.faceWidthPx * 1.2,
-      y: neckCenter.y + face.faceWidthPx * 0.8
+      y: neckCenter.y + face.faceWidthPx * 0.8,
     };
 
     let shoulderWidthPx = face.faceWidthPx * 2.5;
@@ -64,8 +64,14 @@ export class NeckEstimator {
       bodyRot = body.bodyRotation;
 
       // Calculate symmetry based on distance from neck center to each shoulder
-      const dLeft = Math.hypot(leftShoulder.x - neckCenter.x, leftShoulder.y - neckCenter.y);
-      const dRight = Math.hypot(rightShoulder.x - neckCenter.x, rightShoulder.y - neckCenter.y);
+      const dLeft = Math.hypot(
+        leftShoulder.x - neckCenter.x,
+        leftShoulder.y - neckCenter.y,
+      );
+      const dRight = Math.hypot(
+        rightShoulder.x - neckCenter.x,
+        rightShoulder.y - neckCenter.y,
+      );
       const symmetryDiff = Math.abs(dLeft - dRight) / (shoulderWidthPx || 1);
       shoulderSymmetry = Math.max(0, 1.0 - symmetryDiff * 2);
     } else {
@@ -80,9 +86,9 @@ export class NeckEstimator {
     } else {
       quality *= 0.7; // penalize if body tracking is missing for necklaces
     }
-    
+
     // Drop quality if yaw/pitch are extreme or symmetry is very low
-    quality *= (0.5 + 0.5 * shoulderSymmetry);
+    quality *= 0.5 + 0.5 * shoulderSymmetry;
     quality = Math.max(0.1, Math.min(1.0, quality));
 
     return {
@@ -95,7 +101,7 @@ export class NeckEstimator {
       shoulderWidthPx,
       bodyRotation: bodyRot,
       shoulderSymmetry,
-      trackingQuality: quality
+      trackingQuality: quality,
     };
   }
 }

@@ -1,5 +1,5 @@
-import { JewelryMetadata } from '../metadata/JewelryMetadata';
-import { HeadPose, Transform2D } from '../types';
+import { JewelryMetadata } from "../metadata/JewelryMetadata";
+import { HeadPose, Transform2D } from "../types";
 
 /**
  * Computes a horizontal (and slight vertical) compression factor to
@@ -7,8 +7,12 @@ import { HeadPose, Transform2D } from '../types';
  * stretching the sprite unnaturally — compression is clamped by the
  * asset's own `maxCompression`.
  */
-export function computePerspectiveScaleX(meta: JewelryMetadata, pose: HeadPose): number {
-  const { yawFactor, pitchFactor, maxCompression } = meta.perspectiveCompression;
+export function computePerspectiveScaleX(
+  meta: JewelryMetadata,
+  pose: HeadPose,
+): number {
+  const { yawFactor, pitchFactor, maxCompression } =
+    meta.perspectiveCompression;
   const yawCompression = Math.abs(pose.yaw) * yawFactor;
   // X is mainly compressed by yaw. Pitch does a tiny bit.
   const pitchCompression = Math.abs(pose.pitch) * (pitchFactor * 0.5);
@@ -16,7 +20,10 @@ export function computePerspectiveScaleX(meta: JewelryMetadata, pose: HeadPose):
   return 1 - total;
 }
 
-export function computePerspectiveScaleY(meta: JewelryMetadata, pose: HeadPose): number {
+export function computePerspectiveScaleY(
+  meta: JewelryMetadata,
+  pose: HeadPose,
+): number {
   const { pitchFactor, maxCompression } = meta.perspectiveCompression;
   // Y is mainly compressed by pitch.
   const pitchCompression = Math.abs(pose.pitch) * pitchFactor;
@@ -25,8 +32,12 @@ export function computePerspectiveScaleY(meta: JewelryMetadata, pose: HeadPose):
 }
 
 /** Applies the per-product calibration correction on top of an already-anatomically-placed transform. */
-export function applyCalibration(meta: JewelryMetadata, transform: Transform2D): Transform2D {
-  const { scaleCorrection, rotationCorrectionRad, offsetCorrection } = meta.calibration;
+export function applyCalibration(
+  meta: JewelryMetadata,
+  transform: Transform2D,
+): Transform2D {
+  const { scaleCorrection, rotationCorrectionRad, offsetCorrection } =
+    meta.calibration;
   return {
     ...transform,
     x: transform.x + offsetCorrection.x,
@@ -55,7 +66,11 @@ export function baseTransform(renderOrder: number): Transform2D {
 }
 
 /** Standard width->height conversion preserving asset aspect ratio. */
-export function heightForWidth(drawWidth: number, imgWidth: number, imgHeight: number): number {
+export function heightForWidth(
+  drawWidth: number,
+  imgWidth: number,
+  imgHeight: number,
+): number {
   if (!imgWidth) return drawWidth;
   return (drawWidth / imgWidth) * imgHeight;
 }

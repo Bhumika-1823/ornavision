@@ -5,7 +5,7 @@ import {
   DEFAULT_TRACKING_REQUIREMENTS,
   JewelryCategory,
   JewelryMetadata,
-} from './JewelryMetadata';
+} from "./JewelryMetadata";
 
 /** Shape of the original, pre-refactor per-product try-on metadata (kept for backward compatibility). */
 export interface LegacyTryonMetadata {
@@ -52,12 +52,15 @@ const LEGACY_PIVOTS: Record<JewelryCategory, { x: number; y: number }> = {
   watch: { x: 0.5, y: 0.5 },
 };
 
-export function fromLegacy(id: string, legacy: LegacyTryonMetadata): JewelryMetadata {
+export function fromLegacy(
+  id: string,
+  legacy: LegacyTryonMetadata,
+): JewelryMetadata {
   const category = legacy.type;
   return {
     id,
     category,
-    subcategory: 'generic',
+    subcategory: "generic",
     image: legacy.overlayImage,
     anchors: {
       pivot: LEGACY_PIVOTS[category],
@@ -74,7 +77,7 @@ export function fromLegacy(id: string, legacy: LegacyTryonMetadata): JewelryMeta
     lighting: DEFAULT_LIGHTING,
     reflection: false,
     renderOrder: defaultRenderOrder(category),
-    qualityLevel: 'standard',
+    qualityLevel: "standard",
     trackingRequirements: DEFAULT_TRACKING_REQUIREMENTS[category],
     calibration: { ...DEFAULT_CALIBRATION },
   };
@@ -82,17 +85,17 @@ export function fromLegacy(id: string, legacy: LegacyTryonMetadata): JewelryMeta
 
 function defaultRenderOrder(category: JewelryCategory): number {
   switch (category) {
-    case 'forehead':
+    case "forehead":
       return 10;
-    case 'necklace':
+    case "necklace":
       return 20;
-    case 'earrings':
+    case "earrings":
       return 30;
-    case 'nose_ring':
+    case "nose_ring":
       return 40;
-    case 'bracelet':
+    case "bracelet":
       return 50;
-    case 'ring':
+    case "ring":
       return 60;
     default:
       return 0;

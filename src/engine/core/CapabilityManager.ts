@@ -1,4 +1,4 @@
-export type HardwareTier = 'low' | 'mid' | 'high';
+export type HardwareTier = "low" | "mid" | "high";
 
 export interface EngineCapabilities {
   tier: HardwareTier;
@@ -26,46 +26,56 @@ export class CapabilityManager {
     let maxTextureSize = 2048;
 
     // Detect browser hardware APIs
-    if (typeof navigator !== 'undefined') {
+    if (typeof navigator !== "undefined") {
       deviceMemory = (navigator as any).deviceMemory || 4;
       concurrency = navigator.hardwareConcurrency || 4;
     }
 
     // Detect WebGL capabilities
-    if (typeof document !== 'undefined') {
+    if (typeof document !== "undefined") {
       try {
-        const canvas = document.createElement('canvas');
-        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+        const canvas = document.createElement("canvas");
+        const gl =
+          canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
         if (gl) {
-          maxTextureSize = (gl as WebGLRenderingContext).getParameter((gl as WebGLRenderingContext).MAX_TEXTURE_SIZE);
+          maxTextureSize = (gl as WebGLRenderingContext).getParameter(
+            (gl as WebGLRenderingContext).MAX_TEXTURE_SIZE,
+          );
         }
       } catch (e) {
         // Ignore
       }
     }
 
-    let tier: HardwareTier = 'mid';
-    
+    let tier: HardwareTier = "mid";
+
     // Simple heuristic for tier assignment
     if (deviceMemory <= 4 || concurrency <= 4 || maxTextureSize <= 2048) {
-      tier = 'low';
-    } else if (deviceMemory >= 8 && concurrency >= 8 && maxTextureSize >= 4096) {
-      tier = 'high';
+      tier = "low";
+    } else if (
+      deviceMemory >= 8 &&
+      concurrency >= 8 &&
+      maxTextureSize >= 4096
+    ) {
+      tier = "high";
     }
 
     // Force override for testing if global flag is set
-    if (typeof globalThis !== 'undefined' && (globalThis as any).__FORCE_TIER__) {
+    if (
+      typeof globalThis !== "undefined" &&
+      (globalThis as any).__FORCE_TIER__
+    ) {
       tier = (globalThis as any).__FORCE_TIER__;
     }
 
     this.capabilities = {
       tier,
-      canUseBloom: tier === 'high',
-      canUseSegmentation: tier !== 'low', // Mid can use segmentation, but maybe at lower res
-      canUseHighResShadows: tier !== 'low',
-      canUseReflections: tier !== 'low', // Reflections use expensive gradient overlays
+      canUseBloom: tier === "high",
+      canUseSegmentation: tier !== "low", // Mid can use segmentation, but maybe at lower res
+      canUseHighResShadows: tier !== "low",
+      canUseReflections: tier !== "low", // Reflections use expensive gradient overlays
       maxTextureSize,
-      deviceMemory
+      deviceMemory,
     };
 
     return this.capabilities;

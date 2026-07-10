@@ -1,23 +1,22 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from '@/components/ui/toaster';
-import { TooltipProvider } from '@/components/ui/tooltip';
-import { Route, Switch, Router as WouterRouter } from 'wouter';
-import { AppProvider } from '@/context/AppContext';
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Toaster } from "@/components/ui/toaster";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { Route, Switch, Router as WouterRouter } from "wouter";
+import { AppProvider } from "@/context/AppContext";
 
-import Navbar from '@/components/Navbar';
-import HomePage from '@/pages/home';
-import ShopPage from '@/pages/shop';
-import ProductDetailPage from '@/pages/product-detail';
-import TryonPage from '@/pages/tryon';
-import CartPage from '@/pages/cart';
-import CheckoutPage from '@/pages/checkout';
-import DesignerPage from '@/pages/designer';
-import WishlistPage from '@/pages/wishlist';
-import DeveloperScenePage from '@/pages/developer-scene';
-import CalibrationStudioPage from '@/pages/calibration-studio';
-import DeviceLabPage from '@/pages/device-lab';
-import AdminDashboardPage from '@/pages/admin';
-
+import Navbar from "@/components/Navbar";
+import HomePage from "@/pages/home";
+import ShopPage from "@/pages/shop";
+import ProductDetailPage from "@/pages/product-detail";
+import TryonPage from "@/pages/tryon";
+import CartPage from "@/pages/cart";
+import CheckoutPage from "@/pages/checkout";
+import DesignerPage from "@/pages/designer";
+import WishlistPage from "@/pages/wishlist";
+import DeveloperScenePage from "@/pages/developer-scene";
+import CalibrationStudioPage from "@/pages/calibration-studio";
+import DeviceLabPage from "@/pages/device-lab";
+import AdminDashboardPage from "@/pages/admin";
 
 const queryClient = new QueryClient();
 
@@ -25,9 +24,15 @@ function NotFound() {
   return (
     <div className="min-h-screen bg-background flex flex-col items-center justify-center text-center px-4">
       <h1 className="brand-font text-6xl text-primary mb-4">404</h1>
-      <h2 className="text-2xl text-foreground mb-4 uppercase tracking-widest font-light">Page Not Found</h2>
-      <p className="text-muted-foreground mb-8">The vault you are looking for does not exist.</p>
-      <a href="/" className="btn-gold px-8 py-3 rounded-sm">Return Home</a>
+      <h2 className="text-2xl text-foreground mb-4 uppercase tracking-widest font-light">
+        Page Not Found
+      </h2>
+      <p className="text-muted-foreground mb-8">
+        The vault you are looking for does not exist.
+      </p>
+      <a href="/" className="btn-gold px-8 py-3 rounded-sm">
+        Return Home
+      </a>
     </div>
   );
 }
@@ -57,7 +62,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <AppProvider>
-          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, '')}>
+          <WouterRouter base={import.meta.env.BASE_URL.replace(/\/$/, "")}>
             <Navbar />
             <Router />
           </WouterRouter>

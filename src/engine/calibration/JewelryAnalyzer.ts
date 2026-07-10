@@ -1,10 +1,10 @@
 export interface AnalysisResult {
-  boundingBox: { x: number, y: number, width: number, height: number };
-  center: { x: number, y: number }; // normalized [0,1]
+  boundingBox: { x: number; y: number; width: number; height: number };
+  center: { x: number; y: number }; // normalized [0,1]
   topMost: number; // normalized y [0,1]
   bottomMost: number; // normalized y [0,1]
   isSymmetric: boolean;
-  suggestedPivot: { x: number, y: number };
+  suggestedPivot: { x: number; y: number };
 }
 
 /**
@@ -13,19 +13,21 @@ export interface AnalysisResult {
  */
 export class JewelryAnalyzer {
   static analyzeImage(img: HTMLImageElement, category: string): AnalysisResult {
-    const canvas = document.createElement('canvas');
+    const canvas = document.createElement("canvas");
     const w = img.naturalWidth;
     const h = img.naturalHeight;
     canvas.width = w;
     canvas.height = h;
-    const ctx = canvas.getContext('2d')!;
+    const ctx = canvas.getContext("2d")!;
     ctx.drawImage(img, 0, 0);
 
     const data = ctx.getImageData(0, 0, w, h).data;
-    
-    let minX = w, maxX = 0;
-    let minY = h, maxY = 0;
-    
+
+    let minX = w,
+      maxX = 0;
+    let minY = h,
+      maxY = 0;
+
     let leftWeight = 0;
     let rightWeight = 0;
 
@@ -52,16 +54,16 @@ export class JewelryAnalyzer {
         topMost: 0,
         bottomMost: 1,
         isSymmetric: true,
-        suggestedPivot: { x: 0.5, y: 0 }
+        suggestedPivot: { x: 0.5, y: 0 },
       };
     }
 
     const bbW = maxX - minX;
     const bbH = maxY - minY;
-    
+
     const cx = (minX + bbW / 2) / w;
     const cy = (minY + bbH / 2) / h;
-    
+
     const topMost = minY / h;
     const bottomMost = maxY / h;
 
@@ -71,12 +73,12 @@ export class JewelryAnalyzer {
     const isSymmetric = diff / Math.max(1, totalPixels) < 0.1;
 
     let suggestedPivot = { x: 0.5, y: 0 }; // Default top-center
-    
-    if (category === 'ring' || category === 'bracelet') {
+
+    if (category === "ring" || category === "bracelet") {
       suggestedPivot = { x: cx, y: cy };
-    } else if (category === 'necklace') {
+    } else if (category === "necklace") {
       suggestedPivot = { x: cx, y: topMost };
-    } else if (category === 'earrings') {
+    } else if (category === "earrings") {
       suggestedPivot = { x: cx, y: topMost };
     }
 
@@ -86,7 +88,7 @@ export class JewelryAnalyzer {
       topMost,
       bottomMost,
       isSymmetric,
-      suggestedPivot
+      suggestedPivot,
     };
   }
 }
