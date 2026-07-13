@@ -216,7 +216,7 @@ export interface JewelryMetadata {
 
 export const DEFAULT_ANCHORS: Record<JewelryCategory, AnchorSpec> = {
   necklace: { pivot: { x: 0.5, y: 0 }, offsetUnits: { x: 0, y: 0.55 } },
-  earrings: { pivot: { x: 0.5, y: 0 }, offsetUnits: { x: 0, y: 0.12 } },
+  earrings: { pivot: { x: 0.5, y: 0 }, offsetUnits: { x: 0, y: 0.45 } },
   ring: { pivot: { x: 0.5, y: 0.5 }, offsetUnits: { x: 0, y: 0 } },
   bracelet: { pivot: { x: 0.5, y: 0.5 }, offsetUnits: { x: 0, y: 0 } },
   watch: { pivot: { x: 0.5, y: 0.5 }, offsetUnits: { x: 0, y: 0 } },
