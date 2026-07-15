@@ -197,11 +197,14 @@ export class TrackingManager {
     const leftNostril = toPx(smoothed[FACE_IDX.leftNostril], width, height);
     const rightNostril = toPx(smoothed[FACE_IDX.rightNostril], width, height);
 
-    // MediaPipe FaceMesh ear lobe landmarks:
-    // 177 = left ear lobe (viewer's right side), 401 = right ear lobe (viewer's left side)
-    // These are the true lobe attachment points for earrings, not the cheekbone edges (234/454).
-    const leftEarLobe = toPx(smoothed[177], width, height);
-    const rightEarLobe = toPx(smoothed[401], width, height);
+    // Use the tragus landmarks for ear attachment points rather than cheek edges.
+    // We add a downward offset (12% of face width) to map from the mid-ear tragus to the earlobe.
+    const earlobeOffsetY = rawFaceWidth * 0.12;
+    const leftEarLobe = toPx(smoothed[FACE_IDX.leftEarTragus], width, height);
+    leftEarLobe.y += earlobeOffsetY;
+    
+    const rightEarLobe = toPx(smoothed[FACE_IDX.rightEarTragus], width, height);
+    rightEarLobe.y += earlobeOffsetY;
 
     return {
       present: true,

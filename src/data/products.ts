@@ -413,7 +413,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/bridal_nath.png",
-      scale: 0.99,
+      scale: 1.3,
       offsetY: 0,
       offsetX: 0,
     },
@@ -438,7 +438,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/simple_nose_stud.png",
-      scale: 0.264,
+      scale: 0.35,
       offsetY: 0,
       offsetX: 0,
     },
@@ -968,7 +968,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-2.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -990,7 +990,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-3.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -1012,7 +1012,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-4.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -1034,7 +1034,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-5.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -1056,7 +1056,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-6.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -1078,7 +1078,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-7.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -1100,7 +1100,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-8.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -1122,7 +1122,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-9.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },
@@ -1144,7 +1144,7 @@ export const PRODUCTS: Product[] = [
     tryonMetadata: {
       type: "nose_ring",
       overlayImage: "/images/tryon/nosering-10.png",
-      scale: 0.7,
+      scale: 1.4,
       offsetY: 0,
       offsetX: 0,
     },

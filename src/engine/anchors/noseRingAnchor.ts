@@ -33,9 +33,14 @@ export function computeNoseRingTransform(
   const offsetX = meta.anchors.offsetUnits.x * noseWidth;
   const offsetY = meta.anchors.offsetUnits.y * noseWidth;
 
-  // Anchor at the right nostril (traditional Indian nose pin side).
-  // Fall back to noseTip if rightNostril is not available.
-  const anchor = face.rightNostril ?? face.noseTip;
+  const isDesignerNath = meta.id.startsWith("nosering-");
+  const isTraditionalNath = meta.id === "traditional-maharashtrian-nath";
+  
+  // Anchor at the right nostril for traditional, left nostril for new designer naths.
+  // Fall back to noseTip if not available.
+  const anchor = isDesignerNath 
+    ? (face.leftNostril ?? face.noseTip) 
+    : (face.rightNostril ?? face.noseTip);
 
   let transform: Transform2D = {
     ...baseTransform(meta.renderOrder),
@@ -47,38 +52,42 @@ export function computeNoseRingTransform(
     scaleX,
   };
 
-  if (meta.id === "traditional-maharashtrian-nath" && face.rightEar) {
-    // Distance from nose to ear
-    const dx = face.rightEar.x - anchor.x;
-    const dy = face.rightEar.y - anchor.y;
-    const dist = Math.hypot(dx, dy);
+  if ((isTraditionalNath || isDesignerNath)) {
+    const ear = isDesignerNath ? face.leftEar : face.rightEar;
+    if (ear) {
+      // Distance from nose to ear
+      const dx = ear.x - anchor.x;
+      const dy = ear.y - anchor.y;
+      const dist = Math.hypot(dx, dy);
 
-    // Make the chain length (which is the width of the image) match the distance to the ear
-    drawWidth = dist * userAdjust.scale * 1.05; // 5% slack
-    drawHeight =
-      drawWidth * (asset.image.naturalHeight / asset.image.naturalWidth);
+      // Make the chain length match the distance to the ear
+      drawWidth = dist * userAdjust.scale * 1.05; // 5% slack
+      drawHeight = drawWidth * (asset.image.naturalHeight / asset.image.naturalWidth);
 
-    // The image has the ring on the left and chain pointing right.
-    // We want the rightward chain to point to the ear.
-    const angleToEar = Math.atan2(dy, dx);
-    transform.rotation = angleToEar;
-    transform.width = drawWidth;
-    transform.height = drawHeight;
-
-    // CanvasRenderer uses pivot {0.5, 0.5}, drawing the image centered at (x,y).
-    // We want the ring (left edge, x=0 or roughly 5% in) to be at the anchor.
-    // The vector from the ring to the center is (drawWidth * 0.45) in the direction of the ear.
-    const centerOffsetDist = 0.45 * drawWidth;
-    transform.x =
-      anchor.x +
-      Math.cos(angleToEar) * centerOffsetDist +
-      offsetX +
-      userAdjust.offsetX;
-    transform.y =
-      anchor.y +
-      Math.sin(angleToEar) * centerOffsetDist +
-      offsetY +
-      userAdjust.offsetY;
+      const angleToEar = Math.atan2(dy, dx);
+      const centerOffsetDist = 0.45 * drawWidth;
+      
+      if (isDesignerNath) {
+        // Designer naths have the ring on the RIGHT edge and chain on the LEFT edge.
+        // Natural direction of the chain is pointing LEFT (angle Math.PI).
+        transform.rotation = angleToEar - Math.PI; 
+        
+        // We want the ring (RIGHT edge) to be at the anchor.
+        // The vector from the right edge to the center points in the direction of the chain (angleToEar).
+        transform.x = anchor.x + Math.cos(angleToEar) * centerOffsetDist + offsetX + userAdjust.offsetX;
+        transform.y = anchor.y + Math.sin(angleToEar) * centerOffsetDist + offsetY + userAdjust.offsetY;
+      } else {
+        // Traditional nath has the ring on the LEFT edge and chain on the RIGHT edge.
+        transform.rotation = angleToEar;
+        
+        // We want the ring (LEFT edge) to be at the anchor.
+        transform.x = anchor.x + Math.cos(angleToEar) * centerOffsetDist + offsetX + userAdjust.offsetX;
+        transform.y = anchor.y + Math.sin(angleToEar) * centerOffsetDist + offsetY + userAdjust.offsetY;
+      }
+      
+      transform.width = drawWidth;
+      transform.height = drawHeight;
+    }
   }
 
   transform = applyCalibration(meta, transform);

@@ -33,7 +33,7 @@ export function computeForeheadTransform(
   let transform: Transform2D = {
     ...baseTransform(meta.renderOrder),
     x: face.foreheadCenter.x + offsetX + userAdjust.offsetX,
-    y: face.foreheadCenter.y - drawHeight * 0.3 + offsetY + userAdjust.offsetY,
+    y: face.foreheadCenter.y + offsetY + userAdjust.offsetY,
     rotation: face.pose.roll + meta.rotationOffset,
     width: drawWidth,
     height: drawHeight,
