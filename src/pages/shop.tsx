@@ -14,30 +14,35 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function ShopPage() {
-  const [location] = useLocation();
+  const [location, setLocation] = useLocation();
   const { toggleWishlist, wishlist, addToCart } = useAppContext();
 
-  // Extract query params manually since wouter doesn't have useSearchParams
-  const searchParams = new URLSearchParams(window.location.search);
-  const initialCategory = searchParams.get("category") || "all";
+  const getCategoryFromLocation = (loc: string) => {
+    const query = loc.includes("?")
+      ? loc.split("?")[1]
+      : "";
+    const params = new URLSearchParams(query);
+    const categoryParam = params.get("category");
+    return categoryParam && CATEGORIES.some((c) => c.slug === categoryParam)
+      ? categoryParam
+      : "all";
+  };
 
   const MAX_POSSIBLE_PRICE = useMemo(
     () => Math.max(500, ...PRODUCTS.map((p) => p.price)),
     [],
   );
 
-  const [category, setCategory] = useState(initialCategory);
+  const category = useMemo(() => getCategoryFromLocation(location), [location]);
   const [search, setSearch] = useState("");
   const [priceRange, setPriceRange] = useState(MAX_POSSIBLE_PRICE);
   const [tryOnOnly, setTryOnOnly] = useState(false);
   const [sortBy, setSortBy] = useState("newest");
 
-  // Sync category with URL
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const cat = params.get("category");
-    if (cat) setCategory(cat);
-  }, [location]);
+  const updateCategory = (newCategory: string) => {
+    const queryString = newCategory === "all" ? "" : `?category=${encodeURIComponent(newCategory)}`;
+    setLocation(`/shop${queryString}`);
+  };
 
   const filteredProducts = useMemo(() => {
     let result = PRODUCTS;
@@ -133,7 +138,7 @@ export default function ShopPage() {
                   type="radio"
                   className="hidden"
                   checked={category === "all"}
-                  onChange={() => setCategory("all")}
+                  onChange={() => updateCategory("all")}
                 />
                 <span
                   className={`text-sm tracking-wider uppercase ${category === "all" ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`}
@@ -157,7 +162,7 @@ export default function ShopPage() {
                     type="radio"
                     className="hidden"
                     checked={category === cat.slug}
-                    onChange={() => setCategory(cat.slug)}
+                    onChange={() => updateCategory(cat.slug)}
                   />
                   <span
                     className={`text-sm tracking-wider uppercase ${category === cat.slug ? "text-primary" : "text-muted-foreground group-hover:text-foreground"}`}
@@ -264,7 +269,7 @@ export default function ShopPage() {
               </p>
               <button
                 onClick={() => {
-                  setCategory("all");
+                  updateCategory("all");
                   setSearch("");
                   setPriceRange(MAX_POSSIBLE_PRICE);
                   setTryOnOnly(false);

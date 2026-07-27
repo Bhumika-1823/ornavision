@@ -1,4 +1,5 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect, useMemo } from "react";
+import { Link } from "wouter";
 import { PRODUCTS } from "@/data/products";
 import {
   LayoutDashboard,
@@ -12,7 +13,7 @@ import {
   Filter,
 } from "lucide-react";
 
-import { useAppContext } from "@/context/AppContext";
+import { OrderType, useAppContext } from "@/context/AppContext";
 
 // --- MOCK DATA (Customers Only) ---
 
@@ -64,9 +65,44 @@ const MOCK_CUSTOMERS = [
 type TabType = "overview" | "orders" | "customers" | "inventory" | "outofstock";
 
 export default function AdminDashboardPage() {
-  const { orders } = useAppContext();
-  const [activeTab, setActiveTab] = useState<TabType>("overview");
+  const { orders, user, updateOrder } = useAppContext();
+  const [activeTab, setActiveTab] = useState<TabType>("orders");
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
+  const [editableOrder, setEditableOrder] = useState<OrderType | null>(null);
+  const isAdmin = user?.email?.toLowerCase?.() === "admin@anonymous.club";
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-background pt-24 pb-20 flex items-center justify-center px-4">
+        <div className="glass-card rounded-3xl border border-border/50 p-10 text-center max-w-xl">
+          <h1 className="brand-font text-3xl text-foreground mb-4">Admin Access Required</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            You must be signed in with the admin account to view the dashboard.
+          </p>
+          <Link href="/login" className="btn-gold px-6 py-3 rounded-sm uppercase tracking-widest">
+            Sign In as Admin
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen bg-background pt-24 pb-20 flex items-center justify-center px-4">
+        <div className="glass-card rounded-3xl border border-border/50 p-10 text-center max-w-xl">
+          <h1 className="brand-font text-3xl text-foreground mb-4">Unauthorized</h1>
+          <p className="text-sm text-muted-foreground mb-6">
+            This dashboard is only accessible to the admin user.
+          </p>
+          <Link href="/" className="btn-gold px-6 py-3 rounded-sm uppercase tracking-widest">
+            Return Home
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   // Computed Stats
   const totalRevenue = useMemo(
@@ -84,6 +120,75 @@ export default function AdminDashboardPage() {
     () => PRODUCTS.filter((p) => p.stock > 0 && p.stock <= 3),
     [],
   );
+
+  useEffect(() => {
+    if (selectedOrder) {
+      setEditableOrder(selectedOrder);
+    }
+  }, [selectedOrder]);
+
+  useEffect(() => {
+    if (activeTab === "orders" && orders.length > 0 && !selectedOrder) {
+      setSelectedOrder(orders[0]);
+      setEditableOrder(orders[0]);
+    }
+  }, [activeTab, orders, selectedOrder]);
+
+  const statusActions = [
+    {
+      label: "Order Received",
+      status: "Processing" as OrderType["status"],
+      location: "Order received at Ornavision fulfillment center",
+    },
+    {
+      label: "In Transit",
+      status: "Shipped" as OrderType["status"],
+      location: "Package is in transit through our delivery network",
+    },
+    {
+      label: "Local Hub",
+      status: "Local Hub" as OrderType["status"],
+      location: "Arrived at the local hub for final delivery",
+    },
+    {
+      label: "Delivered",
+      status: "Delivered" as OrderType["status"],
+      location: "Delivered to the customer destination",
+    },
+  ];
+
+  const renderStatusButtons = () => {
+    if (!isAdmin || !editableOrder) return null;
+
+    return (
+      <div className="space-y-4">
+        <p className="text-sm text-muted-foreground">
+          Admin shipment controls. Use these actions to update the local hub status and shipping location.
+        </p>
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          {statusActions.map((action) => (
+            <button
+              key={action.label}
+              type="button"
+              onClick={() => {
+                const updatedOrder = {
+                  ...editableOrder,
+                  status: action.status,
+                  currentLocation: action.location,
+                };
+                setEditableOrder(updatedOrder);
+                setSelectedOrder(updatedOrder);
+                updateOrder(updatedOrder);
+              }}
+              className="rounded-3xl border border-border/50 bg-card px-4 py-3 text-sm font-semibold text-foreground hover:border-primary hover:bg-primary/10 transition-colors"
+            >
+              {action.label}
+            </button>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   const renderContent = () => {
     switch (activeTab) {
@@ -293,7 +398,8 @@ export default function AdminDashboardPage() {
                   {filteredOrders.map((order) => (
                     <tr
                       key={order.id}
-                      className="hover:bg-secondary/30 transition-colors"
+                      className={`cursor-pointer transition-colors ${selectedOrder?.id === order.id ? "bg-primary/10" : "hover:bg-secondary/30"}`}
+                      onClick={() => setSelectedOrder(order)}
                     >
                       <td className="px-6 py-4 font-medium text-foreground">
                         {order.id}
@@ -334,6 +440,120 @@ export default function AdminDashboardPage() {
                   )}
                 </tbody>
               </table>
+            </div>
+
+            <div className="glass-card rounded-xl border border-border/50 p-6">
+              <h3 className="brand-font text-xl text-foreground mb-4">
+                {selectedOrder ? "Selected Order Details" : "Select an order to manage"}
+              </h3>
+              {selectedOrder ? (
+                <div className="space-y-4">
+                  <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div className="bg-secondary/50 border border-border rounded-3xl p-5">
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Customer</p>
+                      <p className="text-sm text-foreground font-semibold">{selectedOrder.customer}</p>
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground mt-3">Email</p>
+                      <p className="text-sm text-foreground">{selectedOrder.email}</p>
+                    </div>
+                    <div className="bg-secondary/50 border border-border rounded-3xl p-5">
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">Delivery Date</p>
+                      <p className="text-sm text-foreground font-semibold">{selectedOrder.deliveryDate}</p>
+                      <p className="text-xs uppercase tracking-widest text-muted-foreground mt-3">Tracking Number</p>
+                      <p className="text-sm text-foreground font-semibold">{selectedOrder.trackingNumber}</p>
+                    </div>
+                  </div>
+
+                  {isAdmin && renderStatusButtons()}
+
+                  {isAdmin ? (
+                    editableOrder && (
+                      <form
+                        onSubmit={(e) => {
+                          e.preventDefault();
+                          updateOrder(editableOrder);
+                        }}
+                        className="space-y-4"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <label className="flex flex-col gap-2 text-sm text-muted-foreground">
+                            Order Status
+                            <select
+                              value={editableOrder.status}
+                              onChange={(e) =>
+                                setEditableOrder({ ...editableOrder, status: e.target.value as OrderType["status"] })
+                              }
+                              className="bg-card border border-border rounded-sm px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                            >
+                              <option value="Processing">Processing</option>
+                              <option value="Shipped">Shipped</option>
+                              <option value="Local Hub">Local Hub</option>
+                              <option value="Delivered">Delivered</option>
+                              <option value="Refunded">Refunded</option>
+                            </select>
+                          </label>
+                          <label className="flex flex-col gap-2 text-sm text-muted-foreground">
+                            Current Location
+                            <input
+                              value={editableOrder.currentLocation}
+                              onChange={(e) =>
+                                setEditableOrder({ ...editableOrder, currentLocation: e.target.value })
+                              }
+                              className="bg-card border border-border rounded-sm px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                            />
+                          </label>
+                        </div>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <label className="flex flex-col gap-2 text-sm text-muted-foreground">
+                            Shipping Carrier
+                            <input
+                              value={editableOrder.shippingCarrier}
+                              onChange={(e) =>
+                                setEditableOrder({ ...editableOrder, shippingCarrier: e.target.value })
+                              }
+                              className="bg-card border border-border rounded-sm px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                            />
+                          </label>
+                          <label className="flex flex-col gap-2 text-sm text-muted-foreground">
+                            Delivery Date
+                            <input
+                              type="date"
+                              value={editableOrder.deliveryDate}
+                              onChange={(e) =>
+                                setEditableOrder({ ...editableOrder, deliveryDate: e.target.value })
+                              }
+                              className="bg-card border border-border rounded-sm px-3 py-2 text-sm text-foreground focus:outline-none focus:border-primary transition-colors"
+                            />
+                          </label>
+                        </div>
+                        <button
+                          type="submit"
+                          className="btn-gold px-5 py-3 rounded-sm uppercase tracking-widest"
+                        >
+                          Save Order Update
+                        </button>
+                      </form>
+                    )
+                  ) : (
+                    <div className="space-y-3">
+                      <p className="text-sm text-muted-foreground">
+                        Order tracking details are view-only for standard users.
+                      </p>
+                      <div className="rounded-3xl border border-border/60 bg-secondary/40 p-4">
+                        <p className="text-xs uppercase tracking-widest text-muted-foreground mb-2">
+                          Last admin update
+                        </p>
+                        <p className="text-sm text-foreground">
+                          Local hub and shipment status information is updated by the admin only. If you need help, contact support.
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                <p className="text-sm text-muted-foreground">
+                  Select an order row above to review shipping details and manage status.
+                </p>
+              )}
             </div>
           </div>
         );
@@ -624,14 +844,14 @@ export default function AdminDashboardPage() {
         <div className="mt-auto p-4 border-t border-border/30">
           <div className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-full bg-primary/20 text-primary flex items-center justify-center font-bold">
-              A
+              {user?.name ? user.name.charAt(0).toUpperCase() : "A"}
             </div>
             <div>
               <p className="text-sm text-foreground font-medium">
-                Administrator
+                {user?.name ?? "Admin"}
               </p>
               <p className="text-xs text-muted-foreground">
-                admin@ornavision.com
+                {user?.email ?? "admin@anonymous.club"}
               </p>
             </div>
           </div>

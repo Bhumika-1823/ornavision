@@ -18,6 +18,7 @@ import CalibrationStudioPage from "@/pages/calibration-studio";
 import DeviceLabPage from "@/pages/device-lab";
 import AdminDashboardPage from "@/pages/admin";
 import LoginPage from "@/pages/login";
+import OrderTrackingPage from "@/pages/order-tracking";
 import RegisterPage from "@/pages/register";
 
 const queryClient = new QueryClient();
@@ -48,6 +49,7 @@ function Router() {
       <Route path="/tryon" component={TryonPage} />
       <Route path="/cart" component={CartPage} />
       <Route path="/checkout" component={CheckoutPage} />
+      <Route path="/orders" component={OrderTrackingPage} />
       <Route path="/designer" component={DesignerPage} />
       <Route path="/wishlist" component={WishlistPage} />
       <Route path="/developer-scene" component={DeveloperScenePage} />

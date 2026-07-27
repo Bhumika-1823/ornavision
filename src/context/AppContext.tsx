@@ -7,19 +7,32 @@ import React, {
 } from "react";
 import { PRODUCTS, getProductById } from "@/data/products";
 
+export interface OrderItemType {
+  productId: string;
+  name: string;
+  price: number;
+  quantity: number;
+}
+
 export interface OrderType {
   id: string;
   date: string;
   customer: string;
+  email: string;
   amount: number;
-  status: "Processing" | "Shipped" | "Delivered" | "Refunded";
+  status: "Processing" | "Shipped" | "Local Hub" | "Delivered" | "Refunded";
+  paymentMethod: "card" | "cod" | "upi";
+  deliveryDate: string;
+  shippingCarrier: string;
+  trackingNumber: string;
+  currentLocation: string;
+  items: OrderItemType[];
 }
 
 export interface UserType {
   name: string;
   email: string;
 }
-
 
 interface CartItem {
   productId: string;
@@ -43,7 +56,8 @@ interface AppState {
   applyCoupon: (code: string) => boolean;
   removeCoupon: () => void;
   orders: OrderType[];
-  placeOrder: (order: OrderType) => void;
+  placeOrder: (order: Omit<OrderType, "email">) => void;
+  updateOrder: (order: OrderType) => void;
   user: UserType | null;
   login: (email: string, pass: string) => Promise<boolean>;
   register: (name: string, email: string, pass: string) => Promise<boolean>;
@@ -76,10 +90,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [couponCode, setCouponCode] = useState("");
   const [couponApplied, setCouponApplied] = useState(false);
 
+  const normalizeUser = (value: any): UserType | null => {
+    if (!value || typeof value !== "object") return null;
+    const email = typeof value.email === "string" ? value.email.toLowerCase() : value.email;
+    const name = value.name;
+    if (!email || typeof email !== "string") return null;
+    return {
+      name: email === "admin@anonymous.club" ? "Admin" : (typeof name === "string" ? name : ""),
+      email,
+    };
+  };
+
   const [user, setUser] = useState<UserType | null>(() => {
     try {
       const saved = localStorage.getItem("ornavision_user");
-      return saved ? JSON.parse(saved) : null;
+      return saved ? normalizeUser(JSON.parse(saved)) : null;
     } catch {
       return null;
     }
@@ -87,10 +112,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (user) {
-      localStorage.setItem("ornavision_user", JSON.stringify(user));
+      const normalizedUser = normalizeUser(user);
+      if (!normalizedUser) return;
+      localStorage.setItem("ornavision_user", JSON.stringify(normalizedUser));
       // Fetch cart and orders when user logs in
-      fetch(`/api/cart?email=${user.email}`).then(res => res.json()).then(data => setCart(data));
-      fetch('/api/orders').then(res => res.json()).then(data => setOrders(data));
+      fetch(`/api/cart?email=${normalizedUser.email}`)
+        .then((res) => res.json())
+        .then((data) => setCart(data));
+
+      const ordersUrl =
+        normalizedUser.email === "admin@anonymous.club"
+          ? "/api/orders"
+          : `/api/orders?email=${encodeURIComponent(normalizedUser.email)}`;
+
+      fetch(ordersUrl)
+        .then((res) => res.json())
+        .then((data) => setOrders(data));
     } else {
       localStorage.removeItem("ornavision_user");
       setCart([]);
@@ -114,13 +151,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem("ornavision_wishlist", JSON.stringify(wishlist));
   }, [wishlist]);
 
-  const placeOrder = (order: OrderType) => {
+  const placeOrder = (order: Omit<OrderType, "email">) => {
     if (!user) return;
-    setOrders((prev) => [order, ...prev]);
+    const orderWithEmail: OrderType = {
+      ...order,
+      email: user.email,
+    };
+    setOrders((prev) => [orderWithEmail, ...prev]);
     fetch('/api/orders', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ order })
+      body: JSON.stringify({ order: orderWithEmail }),
+    });
+  };
+
+  const updateOrder = (updatedOrder: OrderType) => {
+    if (!user || user.email !== "admin@anonymous.club") return;
+
+    setOrders((prev) =>
+      prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order)),
+    );
+
+    fetch('/api/orders', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ order: updatedOrder }),
     });
   };
 
@@ -183,6 +238,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const toggleWishlist = (productId: string) => {
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
+
     setWishlist((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
@@ -267,6 +327,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         removeCoupon,
         orders,
         placeOrder,
+        updateOrder,
         user,
         login,
         register,

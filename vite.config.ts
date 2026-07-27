@@ -70,13 +70,27 @@ function apiPlugin() {
             return res.end(JSON.stringify({ success: true }));
           }
 
-          if (req.method === 'GET' && req.url === '/orders') {
-             return res.end(JSON.stringify(db.orders || []));
+          if (req.method === 'GET' && req.url.startsWith('/orders')) {
+            const url = new URL(req.url, `http://${req.headers.host}`);
+            const email = url.searchParams.get('email');
+            if (email) {
+              return res.end(JSON.stringify(db.orders.filter((o: any) => o.email === email)));
+            }
+            return res.end(JSON.stringify(db.orders || []));
           }
           
           if (req.method === 'POST' && req.url === '/orders') {
             const { order } = parsedBody;
             db.orders.push(order);
+            writeDb(db);
+            return res.end(JSON.stringify({ success: true }));
+          }
+
+          if (req.method === 'PUT' && req.url === '/orders') {
+            const { order } = parsedBody;
+            db.orders = db.orders.map((existing: any) =>
+              existing.id === order.id ? order : existing,
+            );
             writeDb(db);
             return res.end(JSON.stringify({ success: true }));
           }

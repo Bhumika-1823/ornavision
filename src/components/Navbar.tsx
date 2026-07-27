@@ -108,6 +108,18 @@ export default function Navbar() {
               <Wand2 size={16} /> Try-On Studio
             </Link>
             <Link
+              href="/orders"
+              className="text-sm tracking-wider uppercase hover-gold transition-colors"
+            >
+              Track Order
+            </Link>
+            <Link
+              href="/admin"
+              className="text-sm tracking-wider uppercase text-primary/80 hover-gold transition-colors"
+            >
+              Dashboard
+            </Link>
+            <Link
               href="/designer"
               className="text-sm tracking-wider uppercase text-primary/80 flex items-center gap-1 hover-gold transition-colors"
             >
@@ -215,6 +227,18 @@ export default function Navbar() {
                 className="text-lg uppercase tracking-widest brand-font"
               >
                 Shop All
+              </Link>
+              <Link
+                href="/orders"
+                className="text-lg uppercase tracking-widest brand-font"
+              >
+                Track Order
+              </Link>
+              <Link
+                href="/admin"
+                className="text-lg uppercase tracking-widest brand-font"
+              >
+                Dashboard
               </Link>
               <div className="flex flex-col gap-3 pl-4 border-l border-border/30">
                 {CATEGORIES.map((cat) => (

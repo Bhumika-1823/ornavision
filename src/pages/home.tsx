@@ -273,7 +273,7 @@ export default function HomePage() {
           </div>
           <div className="md:w-1/2 flex justify-center">
             <div className="relative w-full max-w-md aspect-[3/4] glass-card rounded-2xl overflow-hidden border border-primary/20">
-              <div className="absolute inset-0 bg-black/40 flex items-center justify-center backdrop-blur-[2px] z-10 pointer-events-none">
+              <div className="absolute inset-0 bg-black/40 flex items-center justify-center z-10 pointer-events-none">
                 <div className="w-20 h-20 rounded-full bg-primary/20 flex items-center justify-center border border-primary/50 animate-pulse">
                   <Play className="text-primary ml-1" size={32} />
                 </div>
@@ -289,11 +289,12 @@ export default function HomePage() {
               </div>
               <div className="w-full h-full bg-secondary/80 flex items-center justify-center text-muted-foreground/30 overflow-hidden">
                 <video
-                  src="/videos/brand_video.mp4"
+                  src={`${import.meta.env.BASE_URL}videos/brand_video.mp4`}
                   autoPlay
                   loop
-                  muted
                   playsInline
+                  controls
+                  preload="auto"
                   className="w-full h-full object-cover"
                 />
               </div>

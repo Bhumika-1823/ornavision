@@ -21,7 +21,7 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "cod">("card");
+  const [paymentMethod, setPaymentMethod] = useState<"card" | "cod" | "upi">("card");
 
   // Discount comes from shared coupon context (set on cart page)
   const finalTotal = cartTotal - couponDiscount;
@@ -51,12 +51,26 @@ export default function CheckoutPage() {
       const firstName = (formData.get("firstName") as string) || "Guest";
       const lastName = (formData.get("lastName") as string) || "User";
 
+      const estimatedDelivery = new Date();
+      estimatedDelivery.setDate(estimatedDelivery.getDate() + 5);
+
       placeOrder({
         id: newOrderNumber,
         date: new Date().toISOString().split("T")[0],
         customer: `${firstName} ${lastName}`,
         amount: finalTotal,
         status: "Processing",
+        paymentMethod,
+        deliveryDate: estimatedDelivery.toISOString().split("T")[0],
+        shippingCarrier: "Ornavision Express",
+        trackingNumber: `ORN-${Math.floor(100000 + Math.random() * 900000)}`,
+        currentLocation: "Order received at Ornavision fulfillment center",
+        items: cartItems.map((item) => ({
+          productId: item.product!.id,
+          name: item.product!.name,
+          price: item.product!.price,
+          quantity: item.quantity,
+        })),
       });
 
       setOrderNumber(newOrderNumber);
@@ -293,6 +307,21 @@ export default function CheckoutPage() {
                       Cash on Delivery
                     </span>
                   </label>
+                  <label
+                    className={`flex-1 flex items-center justify-center gap-2 border rounded-lg p-4 cursor-pointer transition-colors ${paymentMethod === "upi" ? "border-primary bg-primary/10" : "border-border/50 bg-card hover:border-primary/50"}`}
+                  >
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="upi"
+                      checked={paymentMethod === "upi"}
+                      onChange={() => setPaymentMethod("upi")}
+                      className="sr-only"
+                    />
+                    <span className="text-sm uppercase tracking-widest font-medium">
+                      UPI Payment
+                    </span>
+                  </label>
                 </div>
 
                 <div className="bg-card border border-border p-6 rounded-lg relative overflow-hidden">
@@ -373,6 +402,46 @@ export default function CheckoutPage() {
                         Secure 256-bit Encryption
                       </div>
                     </>
+                  ) : paymentMethod === "upi" ? (
+                    <div className="space-y-5 relative z-10">
+                      <div className="flex items-center justify-between mb-6">
+                        <span className="text-sm font-medium tracking-wider uppercase text-foreground">
+                          UPI Payment
+                        </span>
+                        <div className="text-xs uppercase tracking-wider text-muted-foreground">
+                          Instant Checkout
+                        </div>
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        Pay instantly using your UPI app. Use the UPI ID below or scan our QR code.
+                      </p>
+                      <div className="space-y-4">
+                        <div className="bg-secondary border border-border rounded-lg px-4 py-4">
+                          <p className="text-xs uppercase tracking-widest text-muted-foreground mb-1">
+                            UPI ID
+                          </p>
+                          <p className="text-lg font-semibold text-foreground">
+                            ornavision@upi
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <label className="text-xs uppercase tracking-widest text-muted-foreground">
+                            Enter your UPI ID *
+                          </label>
+                          <input
+                            required
+                            name="upiId"
+                            type="text"
+                            placeholder="example@upi"
+                            className="w-full bg-secondary border border-border rounded-sm py-3 px-4 text-sm focus:outline-none focus:border-primary transition-colors"
+                          />
+                        </div>
+                      </div>
+                      <div className="mt-6 flex items-center justify-center gap-2 text-xs text-muted-foreground uppercase tracking-widest">
+                        <ShieldCheck size={14} className="text-green-500" />{" "}
+                        Secure UPI payment processing
+                      </div>
+                    </div>
                   ) : (
                     <div className="flex flex-col items-center justify-center py-8 text-center relative z-10">
                       <div className="w-16 h-16 bg-secondary rounded-full flex items-center justify-center mb-4 border border-border/50 text-primary">
