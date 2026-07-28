@@ -20,6 +20,7 @@ import AdminDashboardPage from "@/pages/admin";
 import LoginPage from "@/pages/login";
 import OrderTrackingPage from "@/pages/order-tracking";
 import RegisterPage from "@/pages/register";
+import ForgotPasswordPage from "@/pages/forgot-password";
 
 const queryClient = new QueryClient();
 
@@ -58,6 +59,7 @@ function Router() {
       <Route path="/admin" component={AdminDashboardPage} />
       <Route path="/login" component={LoginPage} />
       <Route path="/register" component={RegisterPage} />
+      <Route path="/forgot-password" component={ForgotPasswordPage} />
       <Route component={NotFound} />
     </Switch>
   );

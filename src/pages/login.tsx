@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Github, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppContext } from "@/context/AppContext";
+import { isAllowedEmailDomain, isValidPassword } from "@/lib/utils";
 
 export default function LoginPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,7 +17,15 @@ export default function LoginPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const success = await login(email, password);
+    if (!isAllowedEmailDomain(email)) {
+      setError("Please sign in with a valid .com email address (for example yahoo.com).");
+      return;
+    }
+    if (!isValidPassword(password)) {
+      setError("Password must be exactly 8 characters and can include uppercase, lowercase, digits, and symbols.");
+      return;
+    }
+    const success = await login(email.trim(), password);
     if (success) {
       setLocation("/");
     } else {
@@ -51,7 +60,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
               <div className="bg-red-500/10 border border-red-500/20 text-red-400 text-sm p-3 rounded-md flex items-center gap-2">
-                <AlertCircle className="w-4 h-4" />
+                <AlertCircle className="w-4 h-4 text-primary" />
                 {error}
               </div>
             )}
@@ -60,7 +69,7 @@ export default function LoginPage() {
                 Email Address
               </label>
               <div className="relative">
-                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/80 group-focus-within:text-primary transition-colors" />
                 <input
                   type="email"
                   value={email}
@@ -77,12 +86,12 @@ export default function LoginPage() {
                 <label className="text-xs uppercase tracking-wider text-muted-foreground group-focus-within:text-primary transition-colors">
                   Password
                 </label>
-                <a href="#" className="text-xs text-primary/80 hover:text-primary transition-colors">
+                <Link href="/forgot-password" className="text-xs text-primary/80 hover:text-primary transition-colors">
                   Forgot Password?
-                </a>
+                </Link>
               </div>
               <div className="relative">
-                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground/50 group-focus-within:text-primary transition-colors" />
+                <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-primary/80 group-focus-within:text-primary transition-colors" />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
@@ -94,7 +103,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground/50 hover:text-primary transition-colors"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-primary/80 hover:text-primary transition-colors"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -103,7 +112,7 @@ export default function LoginPage() {
 
             <Button type="submit" className="w-full btn-gold h-12 uppercase tracking-widest text-sm font-semibold flex items-center justify-center gap-2 group mt-4">
               Sign In
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform text-black" />
             </Button>
           </form>
 

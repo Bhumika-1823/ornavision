@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Github, User, AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppContext } from "@/context/AppContext";
+import { isAllowedEmailDomain, isValidPassword } from "@/lib/utils";
 
 export default function RegisterPage() {
   const [showPassword, setShowPassword] = useState(false);
@@ -17,7 +18,15 @@ export default function RegisterPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const success = await register(name, email, password);
+    if (!isAllowedEmailDomain(email)) {
+      setError("Please register with a valid .com email address (for example yahoo.com).");
+      return;
+    }
+    if (!isValidPassword(password)) {
+      setError("Password must be exactly 8 characters and can include uppercase, lowercase, digits, and symbols.");
+      return;
+    }
+    const success = await register(name, email.trim(), password);
     if (success) {
       setLocation("/");
     } else {

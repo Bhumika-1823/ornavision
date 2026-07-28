@@ -101,7 +101,7 @@ function ShipmentTimeline({
 
 export default function OrderTrackingPage() {
   const { orders, user, updateOrder } = useAppContext();
-  const isAdmin = user?.email?.toLowerCase?.() === "admin@anonymous.club";
+  const isAdmin = user?.email?.toLowerCase?.() === "admin@gmail.com";
 
   const statusActions = [
     {

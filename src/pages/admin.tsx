@@ -70,7 +70,7 @@ export default function AdminDashboardPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedOrder, setSelectedOrder] = useState<OrderType | null>(null);
   const [editableOrder, setEditableOrder] = useState<OrderType | null>(null);
-  const isAdmin = user?.email?.toLowerCase?.() === "admin@anonymous.club";
+  const isAdmin = user?.email?.toLowerCase?.() === "admin@gmail.com";
 
   if (!user) {
     return (
@@ -851,7 +851,7 @@ export default function AdminDashboardPage() {
                 {user?.name ?? "Admin"}
               </p>
               <p className="text-xs text-muted-foreground">
-                {user?.email ?? "admin@anonymous.club"}
+                {user?.email ?? "admin@gmail.com"}
               </p>
             </div>
           </div>

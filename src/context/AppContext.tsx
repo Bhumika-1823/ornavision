@@ -7,6 +7,8 @@ import React, {
 } from "react";
 import { PRODUCTS, getProductById } from "@/data/products";
 
+export const ADMIN_EMAIL = "admin@gmail.com";
+
 export interface OrderItemType {
   productId: string;
   name: string;
@@ -96,7 +98,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     const name = value.name;
     if (!email || typeof email !== "string") return null;
     return {
-      name: email === "admin@anonymous.club" ? "Admin" : (typeof name === "string" ? name : ""),
+      name: email === ADMIN_EMAIL ? "Admin" : (typeof name === "string" ? name : ""),
       email,
     };
   };
@@ -121,7 +123,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         .then((data) => setCart(data));
 
       const ordersUrl =
-        normalizedUser.email === "admin@anonymous.club"
+        normalizedUser.email === ADMIN_EMAIL
           ? "/api/orders"
           : `/api/orders?email=${encodeURIComponent(normalizedUser.email)}`;
 
@@ -166,7 +168,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateOrder = (updatedOrder: OrderType) => {
-    if (!user || user.email !== "admin@anonymous.club") return;
+    if (!user || user.email !== ADMIN_EMAIL) return;
 
     setOrders((prev) =>
       prev.map((order) => (order.id === updatedOrder.id ? updatedOrder : order)),
@@ -270,10 +272,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const login = async (email: string, pass: string) => {
     try {
+      const normalizedEmail = email.trim().toLowerCase();
       const res = await fetch('/api/auth/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password: pass })
+        body: JSON.stringify({ email: normalizedEmail, password: pass })
       });
       const data = await res.json();
       if (data.success) {
@@ -288,10 +291,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   const register = async (name: string, email: string, pass: string) => {
     try {
+      const normalizedEmail = email.trim().toLowerCase();
       const res = await fetch('/api/auth/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password: pass })
+        body: JSON.stringify({ name, email: normalizedEmail, password: pass })
       });
       const data = await res.json();
       if (data.success) {

@@ -69,19 +69,19 @@
 
 :root {
   --background: 220 15% 6%;         /* #0b0b0c — near black */
-  --foreground: 220 13% 96%;         /* #f5f6f8 — near white */
+  --foreground: 40 18% 94%;         /* brighter ivory */
   --card: 222 14% 10%;               /* #141416 */
-  --card-foreground: 220 13% 96%;
+  --card-foreground: 40 18% 94%;     /* match main text on cards */
   --card-border: 43 60% 20%;         /* gold border subtle */
   --popover: 222 14% 10%;
-  --popover-foreground: 220 13% 96%;
+  --popover-foreground: 40 18% 94%;
   --popover-border: 43 60% 20%;
   --primary: 43 72% 46%;             /* #d4af37 gold */
   --primary-foreground: 0 0% 0%;
   --secondary: 222 14% 14%;
-  --secondary-foreground: 220 13% 96%;
+  --secondary-foreground: 40 18% 94%;
   --muted: 222 14% 16%;
-  --muted-foreground: 220 13% 62%;
+  --muted-foreground: 35 12% 74%;    /* softer warm gray */
   --accent: 43 72% 46%;
   --accent-foreground: 0 0% 0%;
   --destructive: 0 72% 51%;

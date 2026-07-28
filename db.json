@@ -2,57 +2,18 @@
   "users": [
     {
       "name": "Admin",
-      "email": "admin@anonymous.club",
-      "password": "admin123"
+      "email": "admin@gmail.com",
+      "password": "Admin@12"
     },
     {
-      "name": "jyothi",
-      "email": "patiljyothi91@gmail.com",
-      "password": "123"
+      "name": "Bhumika",
+      "email": "bhumika@gmail.com",
+      "password": "Sbr@1234"
     }
   ],
   "carts": {
-    "admin@anonymous.club": [],
-    "patiljyothi91@gmail.com": []
+    "admin@gmail.com": [],
+    "bhumika@gmail.com": []
   },
-  "orders": [
-    {
-      "id": "ORN-670870",
-      "date": "2026-07-25",
-      "customer": "Jyothi Patil",
-      "amount": 620,
-      "status": "Processing",
-      "paymentMethod": "cod",
-      "items": [
-        {
-          "productId": "ring-2",
-          "name": "Royal Halo Ring",
-          "price": 310,
-          "quantity": 2
-        }
-      ],
-      "email": "patiljyothi91@gmail.com"
-    },
-    {
-      "id": "ORN-775984",
-      "date": "2026-07-25",
-      "customer": "Jyothi Patil",
-      "amount": 630,
-      "status": "Processing",
-      "paymentMethod": "cod",
-      "deliveryDate": "2026-07-30",
-      "shippingCarrier": "Ornavision Express",
-      "trackingNumber": "ORN-788917",
-      "currentLocation": "Order received at Ornavision fulfillment center",
-      "items": [
-        {
-          "productId": "diamond-eternity-pendant",
-          "name": "Diamond Eternity Pendant",
-          "price": 630,
-          "quantity": 1
-        }
-      ],
-      "email": "patiljyothi91@gmail.com"
-    }
-  ]
+  "orders": []
 }

@@ -35,7 +35,8 @@ function apiPlugin() {
           res.setHeader('Content-Type', 'application/json');
           
           if (req.method === 'POST' && req.url === '/auth/login') {
-            const user = db.users.find((u: any) => u.email === parsedBody.email && u.password === parsedBody.password);
+            const email = typeof parsedBody.email === 'string' ? parsedBody.email.toLowerCase() : parsedBody.email;
+            const user = db.users.find((u: any) => u.email.toLowerCase() === email && u.password === parsedBody.password);
             if (user) {
               return res.end(JSON.stringify({ success: true, user: { name: user.name, email: user.email } }));
             }
@@ -44,14 +45,16 @@ function apiPlugin() {
           }
           
           if (req.method === 'POST' && req.url === '/auth/register') {
-            const exists = db.users.find((u: any) => u.email === parsedBody.email);
+            const email = typeof parsedBody.email === 'string' ? parsedBody.email.toLowerCase() : parsedBody.email;
+            const exists = db.users.find((u: any) => u.email.toLowerCase() === email);
             if (exists) {
               res.statusCode = 400;
               return res.end(JSON.stringify({ success: false, error: 'User exists' }));
             }
-            db.users.push(parsedBody);
+            const normalizedUser = { ...parsedBody, email };
+            db.users.push(normalizedUser);
             writeDb(db);
-            return res.end(JSON.stringify({ success: true, user: { name: parsedBody.name, email: parsedBody.email } }));
+            return res.end(JSON.stringify({ success: true, user: { name: normalizedUser.name, email: normalizedUser.email } }));
           }
           
           if (req.method === 'GET' && req.url.startsWith('/cart')) {

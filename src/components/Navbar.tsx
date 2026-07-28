@@ -184,11 +184,16 @@ export default function Navbar() {
               className="relative text-foreground hover-gold transition-colors"
             >
               <ShoppingBag size={20} />
-              {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-primary text-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full">
-                  {cartCount}
-                </span>
-              )}
+              <span
+                className={`absolute -top-2 -right-2 bg-primary text-black text-[10px] font-bold w-4 h-4 flex items-center justify-center rounded-full transition-all duration-150 ${
+                  cartCount > 0
+                    ? "opacity-100 scale-100"
+                    : "opacity-0 scale-90"
+                }`}
+                aria-hidden={cartCount === 0}
+              >
+                {cartCount}
+              </span>
             </Link>
           </div>
         </div>

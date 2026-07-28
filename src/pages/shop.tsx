@@ -11,7 +11,6 @@ import {
   Sparkles,
   ShoppingBag,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
 
 export default function ShopPage() {
   const [location, setLocation] = useLocation();
@@ -33,14 +32,19 @@ export default function ShopPage() {
     [],
   );
 
-  const category = useMemo(() => getCategoryFromLocation(location), [location]);
+  const [category, setCategory] = useState(() => getCategoryFromLocation(location));
   const [search, setSearch] = useState("");
   const [priceRange, setPriceRange] = useState(MAX_POSSIBLE_PRICE);
   const [tryOnOnly, setTryOnOnly] = useState(false);
   const [sortBy, setSortBy] = useState("newest");
 
+  useEffect(() => {
+    setCategory(getCategoryFromLocation(location));
+  }, [location]);
+
   const updateCategory = (newCategory: string) => {
     const queryString = newCategory === "all" ? "" : `?category=${encodeURIComponent(newCategory)}`;
+    setCategory(newCategory);
     setLocation(`/shop${queryString}`);
   };
 
@@ -281,18 +285,12 @@ export default function ShopPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-              <AnimatePresence>
-                {filteredProducts.map((product) => (
-                  <motion.div
-                    layout
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.9 }}
-                    transition={{ duration: 0.3 }}
-                    key={product.id}
-                    className="group relative flex flex-col h-full bg-card/30 rounded-lg overflow-hidden border border-border hover:border-primary/30 transition-colors"
-                  >
-                    <div className="aspect-[4/5] bg-black relative overflow-hidden">
+              {filteredProducts.map((product) => (
+                <div
+                  key={product.id}
+                  className="group relative flex flex-col h-full bg-card/30 rounded-lg overflow-hidden border border-border hover:border-primary/30 transition-colors"
+                >
+                  <div className="aspect-[4/5] bg-black relative overflow-hidden">
                       {product.tryonMetadata && (
                         <div className="absolute top-3 left-3 z-10 bg-black/80 backdrop-blur-md border border-primary/30 px-2 py-1 rounded text-[10px] uppercase tracking-widest text-primary flex items-center gap-1 shadow-lg">
                           <Sparkles size={10} /> Try On
@@ -376,9 +374,8 @@ export default function ShopPage() {
                         </div>
                       </div>
                     </div>
-                  </motion.div>
-                ))}
-              </AnimatePresence>
+                </div>
+              ))}
             </div>
           )}
         </main>
